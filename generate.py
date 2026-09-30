@@ -26,6 +26,8 @@ TEXT_MODEL = os.getenv("TEXT_MODEL", "openai/gpt-4o-mini")
 IMAGE_MODEL = os.getenv("IMAGE_MODEL", "openai/gpt-5-image-mini")
 # рекламные/промо-записи, которые попадают в RSS
 AD_WORDS = re.compile(r"приглаша|получите|призы за|промокод|бонус|розыгрыш|реклам", re.I)
+# спецпроекты, нативная реклама и не-спортивные разделы (лайфстайл, здоровье и т.п.)
+AD_LINKS = re.compile(r"/special/|/promo|utm_|/lifestyle/|/health/|/life/|/stars/", re.I)
 API = "https://openrouter.ai/api/v1/chat/completions"
 HEADERS = {"Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}",
            "Content-Type": "application/json"}
@@ -70,7 +72,7 @@ def fetch_entries():
         good = []
         for e in feed.entries:
             link, title = e.get("link", ""), clean(e.get("title"))
-            if not link or domain(link) != domain(url) or AD_WORDS.search(title):
+            if not link or domain(link) != domain(url) or AD_WORDS.search(title) or AD_LINKS.search(link):
                 print("  пропуск (реклама/чужой сайт):", link, "|", title)
                 continue
             good.append({"id": hashlib.md5(link.encode()).hexdigest()[:12], "title": title,
