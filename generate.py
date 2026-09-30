@@ -363,14 +363,16 @@ def main():
     good.sort(key=lambda g: (len({c["source"] for c in g["items"]}), max(c["ts"] for c in g["items"])), reverse=True)
     for g in good[:8]:
         print(f"  кандидат ({len(g['items'])} ист.): {g['items'][0]['title']}")
-    chosen = good[:MAX_NEW]
-
-    with ThreadPoolExecutor(max(1, len(chosen))) as ex:
-        arts = list(ex.map(process, chosen))
-    for g, art in zip(chosen, arts):
+    # публикуем MAX_NEW новостей; если кандидат не прошёл фактчек — берём следующего (не больше 3 попыток на новость)
+    published = 0
+    for g in good[:MAX_NEW * 3]:
+        if published >= MAX_NEW:
+            break
+        art = process(g)
         for c in g["items"]:
             state["used"][c["id"]] = NOW
         if art:
+            published += 1
             (ART_DIR / f"{art['id']}.json").write_text(json.dumps(art, ensure_ascii=False, indent=1), "utf-8")
             index.append({k: art[k] for k in ("id", "title", "lead", "category", "published", "image", "thumb", "sources")})
 
