@@ -28,6 +28,9 @@ IMAGE_MODEL = os.getenv("IMAGE_MODEL", "openai/gpt-5-image-mini")
 AD_WORDS = re.compile(r"приглаша|получите|призы за|промокод|бонус|розыгрыш|реклам", re.I)
 # спецпроекты, нативная реклама и не-спортивные разделы (лайфстайл, здоровье и т.п.)
 AD_LINKS = re.compile(r"/special/|/promo|utm_|/lifestyle/|/health/|/life/|/stars/", re.I)
+# спонсоры-букмекеры в названиях турниров («Фонбет КХЛ» -> «КХЛ»): на сайте Melbet конкурентов не упоминаем
+SPONSORS = re.compile(r"(?:Фонбет|Fonbet|FONBET|Winline|Винлайн|Лига Ставок|Лиги Ставок|Лигой Ставок|Бетсити|BetCity|"
+                      r"BetBoom|Бетбум|Олимпбет|OLIMPBET|Olimpbet|Марафонбет|Альфа-Банк)\s*")
 API = "https://openrouter.ai/api/v1/chat/completions"
 HEADERS = {"Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}",
            "Content-Type": "application/json"}
@@ -116,6 +119,8 @@ def rewrite(entry, source_text):
                 "нейтрально и без кликбейта. Используй только факты из исходника, ничего не выдумывай. "
                 "В тексте страницы может быть мусор с сайта (другие новости, реклама, комментарии) — "
                 "бери только то, что относится к новости с данным заголовком. Если фактов мало — пиши короче. "
+                "Не упоминай букмекеров и спонсоров в названиях турниров и лиг: пиши просто «КХЛ», «РПЛ», "
+                "«Суперлига», «Кубок России». "
                 "Верни только JSON с полями: "
                 "title — заголовок до 90 символов; "
                 "lead — 1–2 предложения, суть новости; "
@@ -133,10 +138,11 @@ def rewrite(entry, source_text):
     body = r.get("body") or []
     if isinstance(body, str):
         body = [p for p in body.split("\n") if p.strip()]
+    fix = lambda t: SPONSORS.sub("", str(t)).strip()
     return {
-        "title": str(r["title"]).strip(),
-        "lead": str(r.get("lead") or "").strip(),
-        "body": [str(p).strip() for p in body if str(p).strip()],
+        "title": fix(r["title"]),
+        "lead": fix(r.get("lead") or ""),
+        "body": [fix(p) for p in body if str(p).strip()],
         "category": r.get("category") if r.get("category") in CATEGORIES else "Другое",
         "image_prompt": str(r.get("image_prompt") or entry["title"]),
     }
