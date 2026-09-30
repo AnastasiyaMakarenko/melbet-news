@@ -1,12 +1,18 @@
 name: update-news
 
+# Как это крутится:
+# каждый запуск в конце сам ставит следующий (~через 10 минут) — это надёжнее, чем cron GitHub,
+# который часто опаздывает или пропускает запуски.
+# cron раз в 30 минут — страховка: если цепочка оборвалась, он её перезапускает.
+# Выключить всё: Actions -> update-news -> ... -> Disable workflow.
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: update-news
@@ -15,13 +21,30 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
+      - name: Цепочка жива? (только для запуска по cron)
+        id: chain
+        if: github.event_name == 'schedule'
+        run: |
+          last=$(gh run list -R "$GITHUB_REPOSITORY" --workflow news.yml --event workflow_dispatch --limit 1 --json createdAt -q '.[0].createdAt')
+          if [ -n "$last" ] && [ $(( $(date +%s) - $(date -d "$last" +%s) )) -lt 1200 ]; then
+            echo "Цепочка работает (последний запуск $last) — cron ничего не делает"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.chain.outputs.skip != 'true'
       - uses: actions/setup-python@v5
+        if: steps.chain.outputs.skip != 'true'
         with:
           python-version: "3.12"
-      - run: pip install -r requirements.txt
-      - run: python generate.py
+      - if: steps.chain.outputs.skip != 'true'
+        run: pip install -r requirements.txt
+      - if: steps.chain.outputs.skip != 'true'
+        run: python generate.py
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           # модели можно поменять тут — точные названия смотри на openrouter.ai/models
@@ -29,9 +52,27 @@ jobs:
           IMAGE_MODEL: openai/gpt-5-image-mini
           # сколько новостей публиковать за запуск (раз в 10 мин): 1 = до 144 в сутки. Главный рычаг стоимости
           MAX_NEW: "1"
-      - run: |
+      - if: steps.chain.outputs.skip != 'true'
+        run: |
           git config user.name "news-bot"
           git config user.email "news-bot@users.noreply.github.com"
           git add -A data
           git commit -m "news update" || exit 0
+          git pull --rebase
           git push
+
+      - name: Поставить следующий запуск через ~10 минут
+        if: always() && steps.chain.outputs.skip != 'true'
+        run: |
+          started=$(gh run view "$GITHUB_RUN_ID" -R "$GITHUB_REPOSITORY" --json createdAt -q .createdAt)
+          wait=$(( 600 - ( $(date +%s) - $(date -d "$started" +%s) ) ))
+          [ "$wait" -gt 0 ] && sleep "$wait"
+          # если в очереди уже есть другой запуск — вторую цепочку не создаём
+          others=$(gh run list -R "$GITHUB_REPOSITORY" --workflow news.yml --json databaseId,status \
+            -q "[.[] | select(.databaseId != $GITHUB_RUN_ID and (.status == \"queued\" or .status == \"in_progress\" or .status == \"pending\" or .status == \"waiting\"))] | length")
+          if [ "$others" = "0" ]; then
+            gh workflow run news.yml -R "$GITHUB_REPOSITORY" --ref main
+            echo "Следующий запуск поставлен"
+          else
+            echo "Уже есть запуск в очереди — новый не ставлю"
+          fi
