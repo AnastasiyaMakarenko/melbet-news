@@ -1,0 +1,9 @@
+<div id="test" style="font-size:32px;padding:40px;text-align:center;">❌ Скрипты не работают</div>
+<script>
+  var el = document.getElementById('test');
+  el.innerText = '✅ Скрипты работают';
+  fetch('https://jsonplaceholder.typicode.com/todos/1')
+    .then(function (r) { return r.json(); })
+    .then(function () { el.innerText = '✅ Скрипты работают ✅ Внешние запросы работают'; })
+    .catch(function () { el.innerText = '✅ Скрипты работают ❌ Внешние запросы заблокированы'; });
+</script>
