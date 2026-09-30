@@ -29,7 +29,7 @@ AD_WORDS = re.compile(r"приглаша|получите|призы за|про
 # спецпроекты, нативная реклама и не-спортивные разделы (лайфстайл, здоровье и т.п.)
 AD_LINKS = re.compile(r"/special/|/promo|utm_|/lifestyle/|/health/|/life/|/stars/", re.I)
 # спонсоры-букмекеры в названиях турниров («Фонбет КХЛ» -> «КХЛ»): на сайте Melbet конкурентов не упоминаем
-SPONSORS = re.compile(r"(?:Фонбет|Fonbet|FONBET|Winline|Винлайн|Лига Ставок|Лиги Ставок|Лигой Ставок|Бетсити|BetCity|"
+SPONSORS = re.compile(r"b(?:Фонбет|Fonbet|FONBET|Winline|Винлайн|Лига Ставок|Лиги Ставок|Лигой Ставок|Бетсити|BetCity|"
                       r"BetBoom|Бетбум|Олимпбет|OLIMPBET|Olimpbet|Марафонбет|Альфа-Банк)\s*")
 API = "https://openrouter.ai/api/v1/chat/completions"
 HEADERS = {"Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}",
