@@ -25,8 +25,10 @@ jobs:
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           # модели можно поменять тут — точные названия смотри на openrouter.ai/models
-          TEXT_MODEL: openai/gpt-4o-mini
+          TEXT_MODEL: openai/gpt-4.1-mini
           IMAGE_MODEL: openai/gpt-5-image-mini
+          # сколько новостей публиковать за запуск (раз в 10 мин): 1 = до 144 в сутки. Главный рычаг стоимости
+          MAX_NEW: "1"
       - run: |
           git config user.name "news-bot"
           git config user.email "news-bot@users.noreply.github.com"
