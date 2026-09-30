@@ -1,58 +1,253 @@
 <div id="mbn">
   <style>
-    #mbn{background:#000;color:#fff;min-height:100vh;padding:32px 16px 64px;box-sizing:border-box;font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+    #mbn{--bg:#000;--fg:#fff;--muted:#a8a8a8;--line:#262626;--card:#111;--accent:#ffc107;
+      background:var(--bg);color:var(--fg);min-height:100vh;padding:0 16px 64px;box-sizing:border-box;
+      font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;text-align:left;line-height:1.4}
     #mbn *{box-sizing:border-box}
-    #mbn .mbn-wrap{max-width:760px;margin:0 auto}
-    #mbn h1{font-size:40px;line-height:1.1;margin:0 0 6px;font-weight:800;color:#fff}
-    #mbn .mbn-upd{font-size:14px;color:#bdbdbd;margin:0 0 32px}
-    #mbn article{padding:28px 0;border-top:1px solid #333}
-    #mbn img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:6px;margin:0 0 16px;background:#1a1a1a}
-    #mbn h2{font-size:22px;line-height:1.3;margin:0 0 8px;font-weight:700;color:#fff}
-    #mbn p{font-size:17px;line-height:1.55;margin:0;color:#fff}
-    #mbn .mbn-err{color:#ff6b6b}
-    @media (max-width:600px){#mbn h1{font-size:30px}#mbn h2{font-size:19px}#mbn p{font-size:16px}}
+    #mbn a{color:inherit;text-decoration:none}
+    #mbn h1,#mbn h2,#mbn h3,#mbn p{margin:0;padding:0;color:var(--fg)}
+    #mbn .w{max-width:980px;margin:0 auto}
+
+    /* шапка и разделы */
+    #mbn .top{border-bottom:1px solid var(--line);padding:24px 0 0}
+    #mbn .logo{font-size:30px;font-weight:800;letter-spacing:-.5px}
+    #mbn .logo span{color:var(--accent)}
+    #mbn .nav{display:flex;gap:4px;overflow-x:auto;margin-top:16px;scrollbar-width:none}
+    #mbn .nav::-webkit-scrollbar{display:none}
+    #mbn .nav a{flex:none;padding:10px 12px;font-size:15px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent}
+    #mbn .nav a:hover{color:var(--fg)}
+    #mbn .nav a.on{color:var(--fg);border-color:var(--accent)}
+
+    /* подписи: раздел · время */
+    #mbn .meta{font-size:13px;color:var(--muted);margin-bottom:6px}
+    #mbn .cat{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-size:12px}
+    #mbn .img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:var(--card);border-radius:6px}
+
+    /* главная новость */
+    #mbn .hero{display:grid;grid-template-columns:3fr 2fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line)}
+    #mbn .hero h2{font-size:28px;line-height:1.2;font-weight:800;margin-bottom:10px}
+    #mbn .hero p{font-size:16px;color:#ddd;line-height:1.5}
+    #mbn .hero:hover h2,#mbn .row:hover h3{color:var(--accent)}
+
+    /* список новостей */
+    #mbn .row{display:grid;grid-template-columns:200px 1fr;gap:20px;padding:20px 0;border-bottom:1px solid var(--line)}
+    #mbn .row h3{font-size:19px;line-height:1.3;font-weight:700;margin-bottom:6px}
+    #mbn .row p{font-size:15px;color:#cfcfcf;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    #mbn .more{display:block;width:100%;margin:28px 0 0;padding:14px;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:6px;font-size:15px;font-weight:600;cursor:pointer}
+    #mbn .more:hover{border-color:var(--accent)}
+    #mbn .empty{padding:48px 0;color:var(--muted);text-align:center}
+
+    /* страница новости */
+    #mbn .art{max-width:720px;margin:0 auto;padding:24px 0}
+    #mbn .back{display:inline-block;font-size:15px;color:var(--muted);margin-bottom:20px}
+    #mbn .back:hover{color:var(--fg)}
+    #mbn .art h1{font-size:34px;line-height:1.2;font-weight:800;margin:4px 0 14px}
+    #mbn .art .lead{font-size:19px;line-height:1.5;font-weight:600;margin-bottom:22px}
+    #mbn .art .img{margin-bottom:24px}
+    #mbn .art .body p{font-size:17px;line-height:1.65;margin-bottom:16px;color:#eee}
+    #mbn .also{margin-top:40px;border-top:1px solid var(--line);padding-top:20px}
+    #mbn .also-t{font-size:20px;font-weight:800;margin-bottom:4px}
+
+    #mbn .foot{margin-top:32px;font-size:13px;color:var(--muted)}
+    #mbn .err{color:#ff6b6b}
+
+    @media (max-width:700px){
+      #mbn .logo{font-size:24px}
+      #mbn .hero{grid-template-columns:1fr;gap:14px}
+      #mbn .hero h2{font-size:22px}
+      #mbn .row{grid-template-columns:112px 1fr;gap:14px;padding:16px 0}
+      #mbn .row h3{font-size:16px;margin:0}
+      #mbn .row p{display:none}
+      #mbn .art h1{font-size:26px}
+      #mbn .art .lead{font-size:17px}
+      #mbn .art .body p{font-size:16px}
+    }
   </style>
-  <div class="mbn-wrap">
-    <h1>Новости дня</h1>
-    <div class="mbn-upd" id="mbn-upd">Загружаем новости…</div>
-    <div id="mbn-list"></div>
+
+  <div class="w">
+    <div class="top">
+      <a class="logo" href="#">Новости <span>спорта</span></a>
+      <nav class="nav" id="mbn-nav"></nav>
+    </div>
+    <div id="mbn-view"><div class="empty">Загружаем новости…</div></div>
+    <div class="foot" id="mbn-upd"></div>
   </div>
+
   <script>
   (function () {
     var BASE = 'https://raw.githubusercontent.com/anastasiyamakarenko/melbet-news/main/data/';
-    var list = document.getElementById('mbn-list');
-    var upd = document.getElementById('mbn-upd');
+    var CATS = ['Футбол', 'Хоккей', 'Баскетбол', 'Теннис', 'Единоборства', 'Автоспорт', 'Киберспорт', 'Другое'];
+    var PAGE = 20;
 
-    function render(data) {
-      list.innerHTML = '';
-      (data.items || []).forEach(function (n) {
-        var a = document.createElement('article');
-        if (n.image) {
-          var img = document.createElement('img');
-          img.src = BASE + n.image;
-          img.alt = '';
-          img.loading = 'lazy';
-          a.appendChild(img);
-        }
-        var h = document.createElement('h2'); h.textContent = n.title; a.appendChild(h);
-        var p = document.createElement('p'); p.textContent = n.text; a.appendChild(p);
-        list.appendChild(a);
+    var root = document.getElementById('mbn');
+    var nav = document.getElementById('mbn-nav');
+    var view = document.getElementById('mbn-view');
+    var upd = document.getElementById('mbn-upd');
+    var items = [], shown = PAGE, listScroll = 0, lastRoute = '';
+
+    // всё рисуем через textContent — текст из RSS не может встроить свой HTML
+    function el(tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text != null) e.textContent = text;
+      return e;
+    }
+
+    function when(iso, full) {
+      var d = new Date(iso);
+      var t = d.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+      if (full) return d.toLocaleDateString('ru-RU', {day: 'numeric', month: 'long', year: 'numeric'}) + ', ' + t;
+      var a = new Date(d), b = new Date();
+      a.setHours(0, 0, 0, 0); b.setHours(0, 0, 0, 0);
+      var days = Math.round((b - a) / 864e5);
+      if (days === 0) return 'Сегодня, ' + t;
+      if (days === 1) return 'Вчера, ' + t;
+      return d.toLocaleDateString('ru-RU', {day: 'numeric', month: 'long'}) + ', ' + t;
+    }
+
+    function img(src) {
+      var i = el('img', 'img');
+      i.alt = '';
+      i.loading = 'lazy';
+      if (src) i.src = BASE + src;
+      return i;
+    }
+
+    function meta(n, full) {
+      var m = el('div', 'meta');
+      m.appendChild(el('span', 'cat', n.category));
+      m.appendChild(document.createTextNode(' · ' + when(n.published, full)));
+      return m;
+    }
+
+    function link(n) { return '#n/' + n.id; }
+
+    function hero(n) {
+      var a = el('a', 'hero'); a.href = link(n);
+      a.appendChild(img(n.image));
+      var d = el('div');
+      d.appendChild(meta(n));
+      d.appendChild(el('h2', null, n.title));
+      d.appendChild(el('p', null, n.lead));
+      a.appendChild(d);
+      return a;
+    }
+
+    function row(n) {
+      var a = el('a', 'row'); a.href = link(n);
+      a.appendChild(img(n.thumb || n.image));
+      var d = el('div');
+      d.appendChild(meta(n));
+      d.appendChild(el('h3', null, n.title));
+      d.appendChild(el('p', null, n.lead));
+      a.appendChild(d);
+      return a;
+    }
+
+    function route() {
+      var h = decodeURIComponent(location.hash.slice(1));
+      if (h.indexOf('n/') === 0) return {page: 'news', id: h.slice(2)};
+      if (h.indexOf('c/') === 0) return {page: 'list', cat: h.slice(2)};
+      return {page: 'list', cat: ''};
+    }
+
+    function drawNav(cat) {
+      nav.innerHTML = '';
+      var present = {};
+      items.forEach(function (n) { present[n.category] = 1; });
+      [''].concat(CATS.filter(function (c) { return present[c]; })).forEach(function (c) {
+        var a = el('a', c === cat ? 'on' : '', c || 'Все новости');
+        a.href = c ? '#c/' + encodeURIComponent(c) : '#';
+        nav.appendChild(a);
       });
-      upd.textContent = data.updated_at
-        ? 'Обновлено: ' + new Date(data.updated_at).toLocaleString('ru-RU', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'})
-        : 'Ждём первое обновление';
+    }
+
+    function drawList(cat) {
+      drawNav(cat);
+      var list = items.filter(function (n) { return !cat || n.category === cat; });
+      view.innerHTML = '';
+      if (!list.length) { view.appendChild(el('div', 'empty', 'Новостей пока нет')); return; }
+      view.appendChild(hero(list[0]));
+      list.slice(1, shown).forEach(function (n) { view.appendChild(row(n)); });
+      if (list.length > shown) {
+        var b = el('button', 'more', 'Показать ещё');
+        b.onclick = function () { shown += PAGE; drawList(cat); };
+        view.appendChild(b);
+      }
+    }
+
+    function drawNews(id) {
+      var n0 = items.filter(function (n) { return n.id === id; })[0];
+      drawNav(n0 ? n0.category : '');
+      view.innerHTML = '';
+      var box = el('div', 'art');
+      var back = el('a', 'back', '← Все новости'); back.href = '#';
+      box.appendChild(back);
+      box.appendChild(el('div', 'empty', 'Загружаем…'));
+      view.appendChild(box);
+
+      fetch(BASE + 'a/' + id + '.json')
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (n) {
+          box.removeChild(box.lastChild);
+          box.appendChild(meta(n, true));
+          box.appendChild(el('h1', null, n.title));
+          if (n.lead) box.appendChild(el('p', 'lead', n.lead));
+          if (n.image) box.appendChild(img(n.image));
+          var body = el('div', 'body');
+          (n.body || []).forEach(function (p) { body.appendChild(el('p', null, p)); });
+          box.appendChild(body);
+
+          var others = items.filter(function (x) { return x.id !== n.id; }).slice(0, 5);
+          if (others.length) {
+            var also = el('div', 'also');
+            also.appendChild(el('div', 'also-t', 'Другие новости'));
+            others.forEach(function (x) { also.appendChild(row(x)); });
+            box.appendChild(also);
+          }
+        })
+        .catch(function () {
+          box.lastChild.textContent = 'Эта новость больше недоступна';
+        });
+    }
+
+    function render(fromHashChange) {
+      var r = route();
+      var key = r.page + '/' + (r.id || r.cat);
+      if (fromHashChange && lastRoute.indexOf('list/') === 0) listScroll = window.scrollY;
+      if (r.page === 'news') {
+        drawNews(r.id);
+        if (fromHashChange) root.scrollIntoView();
+      } else {
+        if (key !== lastRoute && lastRoute.indexOf('list/') === 0) shown = PAGE;  // сменили раздел
+        drawList(r.cat);
+        if (fromHashChange) {
+          if (lastRoute.indexOf('news/') === 0 && listScroll) window.scrollTo(0, listScroll);
+          else root.scrollIntoView();
+        }
+      }
+      lastRoute = key;
     }
 
     function load() {
       fetch(BASE + 'news.json?t=' + Date.now())
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-        .then(render)
+        .then(function (data) {
+          var first = !items.length;
+          items = (data.items || []).filter(function (n) { return n.category; });
+          upd.className = 'foot';
+          upd.textContent = data.updated_at ? 'Лента обновлена: ' + when(data.updated_at) : '';
+          // на странице статьи не дёргаем экран — свежие новости появятся в ленте при возврате
+          if (first || route().page === 'list') render(false);
+        })
         .catch(function (e) {
+          if (!items.length) view.innerHTML = '';
+          upd.className = 'foot err';
           upd.textContent = 'Не удалось загрузить новости (' + e.message + ')';
-          upd.className = 'mbn-upd mbn-err';
         });
     }
 
+    window.addEventListener('hashchange', function () { render(true); });
     load();
     setInterval(load, 120000);
   })();
