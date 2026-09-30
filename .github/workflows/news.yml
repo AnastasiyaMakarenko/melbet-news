@@ -2,7 +2,7 @@ name: update-news
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "0 * * * *"  # раз в час, временно ради экономии
   workflow_dispatch:
 
 permissions:
