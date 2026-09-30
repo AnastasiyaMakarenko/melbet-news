@@ -8,7 +8,7 @@
 6. генерирует картинку без людей и кладёт новость в начало ленты.
 
 Что получается в data/:
-  news.json      — лента: updated_at + items[{id,title,lead,category,published,image,thumb,sources}], новые сверху
+  news.json      — лента: updated_at + items[{id,title,lead,category,published,image,thumb}], новые сверху
   a/<id>.json    — полная статья: те же поля + body (список абзацев)
   img/<id>.jpg   — картинка (до 1024px), img/<id>_s.jpg — миниатюра для ленты
   state.json     — какие новости уже разобраны (чтобы не брать одно и то же дважды)
@@ -325,15 +325,14 @@ def process(group):
         return None
 
     # время публикации — момент выхода у нас: свежая новость всегда встаёт в начало ленты
-    used = [items[n] for n in art.pop("used") if 0 <= n < len(items)] or items
-    art.update({"id": nid, "published": iso(NOW), "image": None, "thumb": None,
-                "sources": list(dict.fromkeys(c["source"] for c in used))})
+    art.pop("used", None)
+    art.update({"id": nid, "published": iso(NOW), "image": None, "thumb": None})
     try:
         art["image"], art["thumb"] = make_image(art.pop("image_prompt"), nid)
     except Exception as err:
         print("Картинка не сгенерилась:", err)
     art.pop("image_prompt", None)
-    print(f"Опубликована [{art['category']}] ({len(art['sources'])} ист.): {art['title']}")
+    print(f"Опубликована [{art['category']}]: {art['title']}")
     return art
 
 
@@ -374,7 +373,7 @@ def main():
         if art:
             published += 1
             (ART_DIR / f"{art['id']}.json").write_text(json.dumps(art, ensure_ascii=False, indent=1), "utf-8")
-            index.append({k: art[k] for k in ("id", "title", "lead", "category", "published", "image", "thumb", "sources")})
+            index.append({k: art[k] for k in ("id", "title", "lead", "category", "published", "image", "thumb")})
 
     index.sort(key=lambda i: i["published"], reverse=True)
     index = index[:KEEP]

@@ -45,7 +45,6 @@
     #mbn .art .lead{font-size:19px;line-height:1.5;font-weight:600;margin-bottom:22px}
     #mbn .art .img{margin-bottom:24px}
     #mbn .art .body p{font-size:17px;line-height:1.65;margin-bottom:16px;color:#eee}
-    #mbn .src{font-size:13px;color:var(--muted);margin-top:8px}
     #mbn .also{margin-top:40px;border-top:1px solid var(--line);padding-top:20px}
     #mbn .also-t{font-size:20px;font-weight:800;margin-bottom:4px}
 
@@ -199,7 +198,6 @@
           var body = el('div', 'body');
           (n.body || []).forEach(function (p) { body.appendChild(el('p', null, p)); });
           box.appendChild(body);
-          if (n.sources && n.sources.length) box.appendChild(el('div', 'src', 'Источники: ' + n.sources.join(', ')));
 
           var others = items.filter(function (x) { return x.id !== n.id; }).slice(0, 5);
           if (others.length) {
