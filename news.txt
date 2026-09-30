@@ -77,7 +77,8 @@
   <script>
   (function () {
     var BASE = 'https://raw.githubusercontent.com/anastasiyamakarenko/melbet-news/main/data/';
-    var CATS = ['Футбол', 'Хоккей', 'Баскетбол', 'Теннис', 'Единоборства', 'Автоспорт', 'Киберспорт', 'Другое'];
+    var CATS = ['Футбол', 'Хоккей', 'Баскетбол', 'Теннис', 'Фигурное катание', 'Волейбол', 'Биатлон',
+                'Единоборства', 'Автоспорт', 'Киберспорт', 'Другое'];
     var PAGE = 20;
 
     var root = document.getElementById('mbn');
