@@ -88,8 +88,8 @@
     var CONFIG = {
       urlMode: 'query',
       pathBase: '/ru/news/',
-      author: 'Редакция Melbet',
-      siteName: 'Melbet'
+      author: 'Редакция Мелбет',
+      siteName: 'Мелбет'
     };
     /* ============================================================================================ */
 

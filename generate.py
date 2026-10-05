@@ -58,7 +58,7 @@ IMAGE_MODEL = os.getenv("IMAGE_MODEL", "openai/gpt-5-image-mini")
 AD_WORDS = re.compile(r"приглаша|получите|призы за|промокод|бонус|фрибет|розыгрыш|реклам|коэффициент|прогноз", re.I)
 BAD_LINKS = re.compile(r"/special/|/promo|utm_|/blogs?/|/bets?/|/predictions?/|/prognoz|/bonus|/match/|/zozh/|"
                        r"/movies?/|/cinema|/serial|/lifestyle/|/health/|/life/|/stars/|/video/|/tv/|/photo", re.I)
-# спонсоры-букмекеры в названиях турниров («Фонбет КХЛ» -> «КХЛ»): на сайте Melbet конкурентов не упоминаем
+# спонсоры-букмекеры в названиях турниров («Фонбет КХЛ» -> «КХЛ»): на сайте Мелбет конкурентов не упоминаем
 SPONSORS = re.compile(r"\b(?:Фонбет|Fonbet|FONBET|Winline|Винлайн|Лига Ставок|Лиги Ставок|Лигой Ставок|Бетсити|BetCity|"
                       r"BetBoom|Бетбум|Олимпбет|OLIMPBET|Olimpbet|Марафонбет|Альфа-Банк)\s*")
 
@@ -310,7 +310,8 @@ def rewrite(sources, problems=None):
     body = r.get("body") or []
     if isinstance(body, str):
         body = [p for p in body.split("\n") if p.strip()]
-    fix = lambda t: SPONSORS.sub("", str(t)).strip()
+    # бренд пишем только кириллицей — юридическое требование
+    fix = lambda t: re.sub(r"\bmelbet\b(?![.\-/]\w)", "Мелбет", SPONSORS.sub("", str(t)), flags=re.I).strip()
     return {
         "title": fix(r["title"]),
         "lead": fix(r.get("lead") or ""),
