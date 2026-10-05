@@ -93,6 +93,9 @@
     };
     /* ============================================================================================ */
 
+    // файл открыт с диска (превью), а не с сайта — адреса с ? там не работают, используем #
+    if (!/^https?:$/.test(location.protocol)) CONFIG.urlMode = 'hash';
+
     var BASE = 'https://raw.githubusercontent.com/anastasiyamakarenko/melbet-news/main/data/';
     // раздел: название в данных, кусок адреса, заголовок h1 страницы раздела
     var CATS = [
@@ -116,7 +119,7 @@
     var nav = document.getElementById('mbn-nav');
     var view = document.getElementById('mbn-view');
     var upd = document.getElementById('mbn-upd');
-    var items = [], loaded = false, shown = PAGE, listScroll = 0, lastKey = '', lastHref = null, seq = 0, artCat = null;
+    var items = [], loaded = false, shown = PAGE, listScroll = 0, lastKey = '', lastHref = null, seq = 0, artCat = null, virtual = null;
 
     // всё рисуем через textContent — текст новостей не может встроить свой HTML
     function el(tag, cls, text) {
@@ -142,12 +145,15 @@
       if (CONFIG.urlMode === 'path') return CONFIG.pathBase + (c ? 'c/' + c.slug : '');
       return location.pathname + (c ? '?cat=' + c.slug : '');
     }
-    function abs(u) { return new URL(u, location.origin + location.pathname).href.replace(/#$/, ''); }
+    function abs(u) {
+      try { return new URL(u, location.href.split(/[?#]/)[0]).href.replace(/#$/, ''); }
+      catch (e) { return u; }
+    }
     function dec(s) { try { return decodeURIComponent(s); } catch (e) { return s; } }
 
     // понимаем все виды адресов сразу (и старые ссылки с #), независимо от urlMode
     function route() {
-      var q = new URLSearchParams(location.search), h = dec(location.hash.slice(1));
+      var q = new URLSearchParams(location.search), h = dec((virtual !== null ? virtual : location.hash).slice(1));
       var news = q.get('news'), cat = q.get('cat');
       var p = location.pathname, b = CONFIG.pathBase;
       if (CONFIG.urlMode === 'path' && p.toLowerCase().indexOf(b.toLowerCase()) === 0) {
@@ -185,7 +191,10 @@
     }
     function dropLd() { var s = document.getElementById('mbn-ld'); if (s) s.remove(); }
 
-    function seo(o) {
+    function seo(o) {   // ошибка в SEO-части не должна ломать показ новостей
+      try { seoApply(o); } catch (e) {}
+    }
+    function seoApply(o) {
       if (origTitle === null) origTitle = document.title;
       document.title = o.title;
       meta('description', o.desc);
@@ -410,13 +419,20 @@
       lastHref = location.href;
     }
 
-    function onUrlChange() { if (location.href !== lastHref) render(true); }
+    function onUrlChange() { if (location.href !== lastHref) { virtual = null; render(true); } }
 
     function onClick(e) {
-      if (CONFIG.urlMode === 'hash' || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       var a = e.target.closest ? e.target.closest('a[data-nav]') : null;
       if (!a || !root.contains(a)) return;
       e.preventDefault();
+      if (CONFIG.urlMode === 'hash') {
+        var target = a.getAttribute('href'), before = location.href;
+        try { location.hash = target; } catch (err) {}
+        // окружение не даёт менять адрес (например, предпросмотр файла) — переходим «внутри» страницы
+        if (location.href === before) { virtual = target; render(true); }
+        return;
+      }
       try { history.pushState(null, '', a.getAttribute('href')); }
       catch (err) { location.href = a.href; return; }
       onUrlChange();
