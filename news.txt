@@ -5,23 +5,25 @@
       font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;text-align:left;line-height:1.4}
     #mbn *{box-sizing:border-box}
     #mbn a{color:inherit;text-decoration:none}
-    #mbn h1,#mbn h2,#mbn h3,#mbn p{margin:0;padding:0;color:var(--fg)}
+    #mbn h1,#mbn h2,#mbn h3,#mbn p,#mbn ul,#mbn li,#mbn figure{margin:0;padding:0;color:var(--fg);font-family:inherit}
     #mbn .w{max-width:980px;margin:0 auto}
 
     /* шапка и разделы */
     #mbn .top{border-bottom:1px solid var(--line);padding:24px 0 0}
-    #mbn .logo{font-size:30px;font-weight:800;letter-spacing:-.5px}
+    #mbn .logo{display:block;font-size:30px;line-height:1.2;font-weight:800;letter-spacing:-.5px}
     #mbn .logo span{color:var(--accent)}
-    #mbn .nav{display:flex;gap:4px;overflow-x:auto;margin-top:16px;scrollbar-width:none}
+    #mbn .nav{display:flex;gap:4px;overflow-x:auto;margin-top:16px;list-style:none;scrollbar-width:none}
     #mbn .nav::-webkit-scrollbar{display:none}
-    #mbn .nav a{flex:none;padding:10px 12px;font-size:15px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent}
+    #mbn .nav li{flex:none}
+    #mbn .nav a{display:block;padding:10px 12px;font-size:15px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent}
     #mbn .nav a:hover{color:var(--fg)}
     #mbn .nav a.on{color:var(--fg);border-color:var(--accent)}
+    #mbn .h1c{font-size:26px;line-height:1.2;font-weight:800;margin-top:24px}
 
     /* подписи: раздел · время */
     #mbn .meta{font-size:13px;color:var(--muted);margin-bottom:6px}
     #mbn .cat{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-size:12px}
-    #mbn .img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;background:var(--card);border-radius:6px}
+    #mbn .img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;background:var(--card);border-radius:6px}
 
     /* главная новость */
     #mbn .hero{display:grid;grid-template-columns:3fr 2fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line)}
@@ -43,7 +45,7 @@
     #mbn .back:hover{color:var(--fg)}
     #mbn .art h1{font-size:34px;line-height:1.2;font-weight:800;margin:4px 0 14px}
     #mbn .art .lead{font-size:19px;line-height:1.5;font-weight:600;margin-bottom:22px}
-    #mbn .art .img{margin-bottom:24px}
+    #mbn .art figure{margin-bottom:24px}
     #mbn .art .body p{font-size:17px;line-height:1.65;margin-bottom:16px;color:#eee}
     #mbn .also{margin-top:40px;border-top:1px solid var(--line);padding-top:20px}
     #mbn .also-t{font-size:20px;font-weight:800;margin-bottom:4px}
@@ -53,6 +55,7 @@
 
     @media (max-width:700px){
       #mbn .logo{font-size:24px}
+      #mbn .h1c{font-size:22px}
       #mbn .hero{grid-template-columns:1fr;gap:14px}
       #mbn .hero h2{font-size:22px}
       #mbn .row{grid-template-columns:112px 1fr;gap:14px;padding:16px 0}
@@ -65,28 +68,57 @@
   </style>
 
   <div class="w">
-    <div class="top">
-      <a class="logo" href="#">Новости <span>спорта</span></a>
-      <nav class="nav" id="mbn-nav"></nav>
-    </div>
-    <div id="mbn-view"><div class="empty">Загружаем новости…</div></div>
+    <header class="top">
+      <div id="mbn-logo"></div>
+      <nav aria-label="Разделы новостей"><ul class="nav" id="mbn-nav"></ul></nav>
+    </header>
+    <main id="mbn-view"><div class="empty">Загружаем новости…</div></main>
     <div class="foot" id="mbn-upd"></div>
   </div>
 
   <script>
   (function () {
+    /* ================== НАСТРОЙКИ (единственное, что может понадобиться менять) ==================
+       urlMode — как выглядят адреса новостей:
+         'query' → …/melbetpremiumsize?news=sbornaya-rossii-obygrala-iran   (работает без доработок платформы)
+         'path'  → /ru/news/sbornaya-rossii-obygrala-iran                   (нужно, чтобы платформа отдавала этот
+                                                                             лендинг по всем адресам pathBase + *)
+         'hash'  → …/melbetpremiumsize#n/sbornaya-…                          (как было раньше; НЕ индексируется)
+       Если меняете urlMode/pathBase — поменяйте и SITE_*_URL в generate.py (адреса в sitemap.xml). */
+    var CONFIG = {
+      urlMode: 'query',
+      pathBase: '/ru/news/',
+      author: 'Редакция Melbet',
+      siteName: 'Melbet'
+    };
+    /* ============================================================================================ */
+
     var BASE = 'https://raw.githubusercontent.com/anastasiyamakarenko/melbet-news/main/data/';
-    var CATS = ['Футбол', 'Хоккей', 'Баскетбол', 'Теннис', 'Фигурное катание', 'Волейбол', 'Биатлон',
-                'Единоборства', 'Автоспорт', 'Киберспорт', 'Другое'];
+    // раздел: название в данных, кусок адреса, заголовок h1 страницы раздела
+    var CATS = [
+      ['Футбол', 'football', 'Новости футбола'], ['Хоккей', 'hockey', 'Новости хоккея'],
+      ['Баскетбол', 'basketball', 'Новости баскетбола'], ['Теннис', 'tennis', 'Новости тенниса'],
+      ['Фигурное катание', 'figure-skating', 'Новости фигурного катания'], ['Волейбол', 'volleyball', 'Новости волейбола'],
+      ['Биатлон', 'biathlon', 'Новости биатлона'], ['Единоборства', 'martial-arts', 'Новости единоборств'],
+      ['Автоспорт', 'motorsport', 'Новости автоспорта'], ['Киберспорт', 'esports', 'Новости киберспорта'],
+      ['Другое', 'other', 'Другие новости спорта']
+    ].map(function (c) { return {label: c[0], slug: c[1], h1: c[2]}; });
+    var HOME_TITLE = 'Новости спорта';
+    var HOME_DESC = 'Свежие новости спорта: футбол, хоккей, баскетбол, теннис и другие виды. Результаты матчей, трансферы, заявления игроков и тренеров.';
     var PAGE = 20;
 
+    // если платформа перерисовала страницу и скрипт запустился второй раз — выключаем прошлый экземпляр
+    if (window.__mbnStop) { try { window.__mbnStop(); } catch (e) {} }
+    window.prerenderReady = false;   // сигнал пререндеру: страница ещё не готова
+
     var root = document.getElementById('mbn');
+    var logo = document.getElementById('mbn-logo');
     var nav = document.getElementById('mbn-nav');
     var view = document.getElementById('mbn-view');
     var upd = document.getElementById('mbn-upd');
-    var items = [], shown = PAGE, listScroll = 0, lastRoute = '';
+    var items = [], loaded = false, shown = PAGE, listScroll = 0, lastKey = '', lastHref = null, seq = 0, artCat = null;
 
-    // всё рисуем через textContent — текст из RSS не может встроить свой HTML
+    // всё рисуем через textContent — текст новостей не может встроить свой HTML
     function el(tag, cls, text) {
       var e = document.createElement(tag);
       if (cls) e.className = cls;
@@ -94,6 +126,96 @@
       return e;
     }
 
+    /* ---------- адреса ---------- */
+    function findCat(v) {
+      if (!v) return null;
+      for (var i = 0; i < CATS.length; i++) if (CATS[i].slug === v || CATS[i].label === v) return CATS[i];
+      return null;
+    }
+    function urlNews(id) {
+      if (CONFIG.urlMode === 'hash') return '#n/' + id;
+      if (CONFIG.urlMode === 'path') return CONFIG.pathBase + id;
+      return location.pathname + '?news=' + id;
+    }
+    function urlCat(c) {
+      if (CONFIG.urlMode === 'hash') return c ? '#c/' + c.slug : '#';
+      if (CONFIG.urlMode === 'path') return CONFIG.pathBase + (c ? 'c/' + c.slug : '');
+      return location.pathname + (c ? '?cat=' + c.slug : '');
+    }
+    function abs(u) { return new URL(u, location.origin + location.pathname).href.replace(/#$/, ''); }
+    function dec(s) { try { return decodeURIComponent(s); } catch (e) { return s; } }
+
+    // понимаем все виды адресов сразу (и старые ссылки с #), независимо от urlMode
+    function route() {
+      var q = new URLSearchParams(location.search), h = dec(location.hash.slice(1));
+      var news = q.get('news'), cat = q.get('cat');
+      var p = location.pathname, b = CONFIG.pathBase;
+      if (CONFIG.urlMode === 'path' && p.toLowerCase().indexOf(b.toLowerCase()) === 0) {
+        var rest = dec(p.slice(b.length)).replace(/\/+$/, '');
+        if (rest.indexOf('c/') === 0) cat = rest.slice(2); else if (rest) news = rest;
+      }
+      if (!news && h.indexOf('n/') === 0) news = h.slice(2);
+      if (!news && !cat && h.indexOf('c/') === 0) cat = h.slice(2);
+      if (news) return {page: 'news', id: news};
+      return {page: 'list', cat: findCat(cat)};
+    }
+
+    /* ---------- SEO: title, description, canonical, Open Graph, микроразметка ---------- */
+    var tags = {}, origTitle = null;
+    function tag(key, selector, make, attr, value) {
+      var t = tags[key];
+      if (!t) {
+        var e = document.head.querySelector(selector), created = !e;
+        if (created) { e = make(); document.head.appendChild(e); }
+        t = tags[key] = {el: e, created: created, attr: attr, orig: created ? null : e.getAttribute(attr)};
+      }
+      t.el.setAttribute(attr, value);
+    }
+    function meta(name, value, prop) {
+      var a = prop ? 'property' : 'name';
+      tag(a + ':' + name, 'meta[' + a + '="' + name + '"]', function () {
+        var m = document.createElement('meta'); m.setAttribute(a, name); return m;
+      }, 'content', value);
+    }
+    function dropTag(key) {   // вернуть как было до нас
+      var t = tags[key];
+      if (!t) return;
+      if (t.created) t.el.remove(); else if (t.orig != null) t.el.setAttribute(t.attr, t.orig);
+      delete tags[key];
+    }
+    function dropLd() { var s = document.getElementById('mbn-ld'); if (s) s.remove(); }
+
+    function seo(o) {
+      if (origTitle === null) origTitle = document.title;
+      document.title = o.title;
+      meta('description', o.desc);
+      tag('canonical', 'link[rel="canonical"]', function () {
+        var l = document.createElement('link'); l.rel = 'canonical'; return l;
+      }, 'href', o.url);
+      meta('og:title', o.title, true);
+      meta('og:description', o.desc, true);
+      meta('og:url', o.url, true);
+      meta('og:type', o.type, true);
+      meta('og:site_name', CONFIG.siteName, true);
+      if (o.image) meta('og:image', o.image, true); else dropTag('property:og:image');
+      if (o.notFound) { meta('robots', 'noindex'); meta('prerender-status-code', '404'); }
+      else { dropTag('name:robots'); dropTag('name:prerender-status-code'); }
+      dropLd();
+      if (o.ld) {
+        var s = document.createElement('script');
+        s.type = 'application/ld+json'; s.id = 'mbn-ld';
+        s.textContent = JSON.stringify(o.ld).replace(/</g, '\\u003c');
+        document.head.appendChild(s);
+      }
+    }
+    function crumbs(list) {
+      return {'@type': 'BreadcrumbList', itemListElement: list.map(function (c, i) {
+        return {'@type': 'ListItem', position: i + 1, name: c[0], item: c[1]};
+      })};
+    }
+    function ready() { window.prerenderReady = true; }
+
+    /* ---------- кусочки вёрстки ---------- */
     function when(iso, full) {
       var d = new Date(iso);
       var t = d.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
@@ -106,151 +228,244 @@
       return d.toLocaleDateString('ru-RU', {day: 'numeric', month: 'long'}) + ', ' + t;
     }
 
-    function img(src) {
+    function link(cls, href, text) {   // внутренняя ссылка: настоящий href для поисковиков, переход без перезагрузки
+      var a = el('a', cls, text);
+      a.href = href;
+      a.setAttribute('data-nav', '');
+      return a;
+    }
+
+    function img(src, alt, eager) {
       var i = el('img', 'img');
-      i.alt = '';
-      i.loading = 'lazy';
+      i.alt = alt || '';
+      i.loading = eager ? 'eager' : 'lazy';
+      i.width = 3; i.height = 2;       // пропорции, чтобы страница не прыгала при загрузке
       if (src) i.src = BASE + src;
       return i;
     }
 
-    function meta(n, full) {
+    function metaLine(n, full) {
       var m = el('div', 'meta');
-      m.appendChild(el('span', 'cat', n.category));
-      m.appendChild(document.createTextNode(' · ' + when(n.published, full)));
+      var c = findCat(n.category);
+      if (full && c) m.appendChild(link('cat', urlCat(c), n.category)); else m.appendChild(el('span', 'cat', n.category));
+      m.appendChild(document.createTextNode(' · '));
+      var t = el('time', null, when(n.published, full));
+      t.setAttribute('datetime', n.published);
+      m.appendChild(t);
+      if (full) m.appendChild(document.createTextNode(' · ' + CONFIG.author));
       return m;
     }
 
-    function link(n) { return '#n/' + n.id; }
-
-    function hero(n) {
-      var a = el('a', 'hero'); a.href = link(n);
-      a.appendChild(img(n.image));
+    function card(n, big) {
+      var a = link(big ? 'hero' : 'row', urlNews(n.id));
+      a.appendChild(img(big ? n.image : (n.thumb || n.image), n.title, big));
       var d = el('div');
-      d.appendChild(meta(n));
-      d.appendChild(el('h2', null, n.title));
+      d.appendChild(metaLine(n));
+      d.appendChild(el(big ? 'h2' : 'h3', null, n.title));
       d.appendChild(el('p', null, n.lead));
       a.appendChild(d);
       return a;
     }
 
-    function row(n) {
-      var a = el('a', 'row'); a.href = link(n);
-      a.appendChild(img(n.thumb || n.image));
-      var d = el('div');
-      d.appendChild(meta(n));
-      d.appendChild(el('h3', null, n.title));
-      d.appendChild(el('p', null, n.lead));
-      a.appendChild(d);
-      return a;
-    }
+    function drawHeader(isHome, cat) {
+      // логотип — h1 только на главной ленты: на странице всегда ровно один h1
+      logo.innerHTML = '';
+      var box = el(isHome ? 'h1' : 'div', 'logo');
+      var a = link(null, urlCat(null));
+      a.appendChild(document.createTextNode('Новости '));
+      a.appendChild(el('span', null, 'спорта'));
+      box.appendChild(a);
+      logo.appendChild(box);
 
-    function route() {
-      var h = decodeURIComponent(location.hash.slice(1));
-      if (h.indexOf('n/') === 0) return {page: 'news', id: h.slice(2)};
-      if (h.indexOf('c/') === 0) return {page: 'list', cat: h.slice(2)};
-      return {page: 'list', cat: ''};
-    }
-
-    function drawNav(cat) {
       nav.innerHTML = '';
       var present = {};
       items.forEach(function (n) { present[n.category] = 1; });
-      [''].concat(CATS.filter(function (c) { return present[c]; })).forEach(function (c) {
-        var a = el('a', c === cat ? 'on' : '', c || 'Все новости');
-        a.href = c ? '#c/' + encodeURIComponent(c) : '#';
-        nav.appendChild(a);
+      [null].concat(CATS.filter(function (c) { return present[c.label]; })).forEach(function (c) {
+        var li = el('li');
+        li.appendChild(link(c === cat || (c && cat && c.slug === cat.slug) ? 'on' : '', urlCat(c), c ? c.label : 'Все новости'));
+        nav.appendChild(li);
       });
     }
 
+    /* ---------- лента ---------- */
     function drawList(cat) {
-      drawNav(cat);
-      var list = items.filter(function (n) { return !cat || n.category === cat; });
+      drawHeader(!cat, cat);
+      var list = items.filter(function (n) { return !cat || n.category === cat.label; });
       view.innerHTML = '';
-      if (!list.length) { view.appendChild(el('div', 'empty', 'Новостей пока нет')); return; }
-      view.appendChild(hero(list[0]));
-      list.slice(1, shown).forEach(function (n) { view.appendChild(row(n)); });
-      if (list.length > shown) {
-        var b = el('button', 'more', 'Показать ещё');
-        b.onclick = function () { shown += PAGE; drawList(cat); };
-        view.appendChild(b);
+      if (cat) view.appendChild(el('h1', 'h1c', cat.h1));
+      if (!list.length) view.appendChild(el('div', 'empty', loaded ? 'Новостей пока нет' : 'Загружаем новости…'));
+      else {
+        view.appendChild(card(list[0], true));
+        list.slice(1, shown).forEach(function (n) { view.appendChild(card(n)); });
+        if (list.length > shown) {
+          var b = el('button', 'more', 'Показать ещё');
+          b.type = 'button';
+          b.onclick = function () { shown += PAGE; drawList(cat); };
+          view.appendChild(b);
+        }
       }
+      var url = abs(urlCat(cat));
+      seo({
+        title: (cat ? cat.h1 : HOME_TITLE) + ' — ' + CONFIG.siteName,
+        desc: cat ? cat.h1 + ': свежие события, результаты, трансферы и заявления.' : HOME_DESC,
+        url: url, type: 'website',
+        image: list.length && list[0].image ? BASE + list[0].image : null,
+        ld: cat ? {'@context': 'https://schema.org', '@graph': [crumbs([[HOME_TITLE, abs(urlCat(null))], [cat.h1, url]])]} : null
+      });
+      if (loaded) ready();
+    }
+
+    /* ---------- страница новости ---------- */
+    function fillOthers(box, id) {
+      var old = box.querySelector('.also');
+      if (old) old.remove();
+      var others = items.filter(function (x) { return x.id !== id; }).slice(0, 5);
+      if (!others.length) return;
+      var also = el('aside', 'also');
+      also.appendChild(el('div', 'also-t', 'Другие новости'));
+      others.forEach(function (x) { also.appendChild(card(x)); });
+      box.appendChild(also);
     }
 
     function drawNews(id) {
-      var n0 = items.filter(function (n) { return n.id === id; })[0];
-      drawNav(n0 ? n0.category : '');
+      var my = ++seq;
+      artCat = null;
+      drawHeader(false, null);
       view.innerHTML = '';
-      var box = el('div', 'art');
-      var back = el('a', 'back', '← Все новости'); back.href = '#';
-      box.appendChild(back);
-      box.appendChild(el('div', 'empty', 'Загружаем…'));
+      var box = el('article', 'art');
+      box.appendChild(link('back', urlCat(null), '← Все новости'));
+      var note = el('div', 'empty', 'Загружаем…');
+      box.appendChild(note);
       view.appendChild(box);
 
+      function fail(notFound) {
+        if (my !== seq) return;
+        note.textContent = notFound ? 'Новость не найдена. Возможно, она устарела и удалена из архива.' : 'Не удалось загрузить новость. Обновите страницу.';
+        if (notFound) seo({title: 'Новость не найдена — ' + CONFIG.siteName, desc: HOME_DESC, url: abs(urlCat(null)), type: 'website', notFound: true});
+        ready();
+      }
+      if (!/^[a-z0-9-]+$/i.test(id)) { fail(true); return; }
+
       fetch(BASE + 'a/' + id + '.json')
-        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (r) {
+          if (r.status === 404) { fail(true); return null; }
+          if (!r.ok) throw new Error(r.status);
+          return r.json();
+        })
         .then(function (n) {
-          box.removeChild(box.lastChild);
-          box.appendChild(meta(n, true));
+          if (!n || my !== seq) return;
+          var cat = artCat = findCat(n.category);
+          drawHeader(false, cat);
+          box.removeChild(note);
+          box.appendChild(metaLine(n, true));
           box.appendChild(el('h1', null, n.title));
           if (n.lead) box.appendChild(el('p', 'lead', n.lead));
-          if (n.image) box.appendChild(img(n.image));
+          if (n.image) { var f = el('figure'); f.appendChild(img(n.image, n.title, true)); box.appendChild(f); }
           var body = el('div', 'body');
           (n.body || []).forEach(function (p) { body.appendChild(el('p', null, p)); });
           box.appendChild(body);
+          fillOthers(box, n.id);
 
-          var others = items.filter(function (x) { return x.id !== n.id; }).slice(0, 5);
-          if (others.length) {
-            var also = el('div', 'also');
-            also.appendChild(el('div', 'also-t', 'Другие новости'));
-            others.forEach(function (x) { also.appendChild(row(x)); });
-            box.appendChild(also);
-          }
+          var url = abs(urlNews(n.id)), home = abs(urlCat(null));
+          var trail = [[HOME_TITLE, home]];
+          if (cat) trail.push([cat.h1, abs(urlCat(cat))]);
+          trail.push([n.title, url]);
+          var article = {
+            '@type': 'NewsArticle', headline: n.title.slice(0, 110), description: n.lead,
+            datePublished: n.published, dateModified: n.modified || n.published,
+            articleSection: n.category, inLanguage: 'ru',
+            mainEntityOfPage: {'@type': 'WebPage', '@id': url},
+            author: {'@type': 'Organization', name: CONFIG.author},
+            publisher: {'@type': 'Organization', name: CONFIG.siteName}
+          };
+          if (n.image) article.image = [BASE + n.image];
+          seo({
+            title: n.title + ' — ' + CONFIG.siteName, desc: n.lead || n.title, url: url, type: 'article',
+            image: n.image ? BASE + n.image : null,
+            ld: {'@context': 'https://schema.org', '@graph': [article, crumbs(trail)]}
+          });
+          ready();
         })
-        .catch(function () {
-          box.lastChild.textContent = 'Эта новость больше недоступна';
-        });
+        .catch(function () { fail(false); });
     }
 
-    function render(fromHashChange) {
+    /* ---------- переходы ---------- */
+    function render(isNav) {
       var r = route();
-      var key = r.page + '/' + (r.id || r.cat);
-      if (fromHashChange && lastRoute.indexOf('list/') === 0) listScroll = window.scrollY;
+      var key = r.page + '/' + (r.id || (r.cat ? r.cat.slug : ''));
+      if (isNav && lastKey.indexOf('list/') === 0) listScroll = window.scrollY;
       if (r.page === 'news') {
         drawNews(r.id);
-        if (fromHashChange) root.scrollIntoView();
+        if (isNav) root.scrollIntoView();
       } else {
-        if (key !== lastRoute && lastRoute.indexOf('list/') === 0) shown = PAGE;  // сменили раздел
+        seq++;
+        if (key !== lastKey && lastKey.indexOf('list/') === 0) shown = PAGE;   // сменили раздел
         drawList(r.cat);
-        if (fromHashChange) {
-          if (lastRoute.indexOf('news/') === 0 && listScroll) window.scrollTo(0, listScroll);
+        if (isNav) {
+          if (lastKey.indexOf('news/') === 0 && listScroll) window.scrollTo(0, listScroll);
           else root.scrollIntoView();
         }
       }
-      lastRoute = key;
+      lastKey = key;
+      lastHref = location.href;
     }
 
+    function onUrlChange() { if (location.href !== lastHref) render(true); }
+
+    function onClick(e) {
+      if (CONFIG.urlMode === 'hash' || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest ? e.target.closest('a[data-nav]') : null;
+      if (!a || !root.contains(a)) return;
+      e.preventDefault();
+      try { history.pushState(null, '', a.getAttribute('href')); }
+      catch (err) { location.href = a.href; return; }
+      onUrlChange();
+    }
+
+    /* ---------- загрузка ленты ---------- */
     function load() {
       fetch(BASE + 'news.json?t=' + Date.now())
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(function (data) {
-          var first = !items.length;
+          loaded = true;
           items = (data.items || []).filter(function (n) { return n.category; });
           upd.className = 'foot';
           upd.textContent = data.updated_at ? 'Лента обновлена: ' + when(data.updated_at) : '';
-          // на странице статьи не дёргаем экран — свежие новости появятся в ленте при возврате
-          if (first || route().page === 'list') render(false);
+          var r = route();
+          if (r.page === 'list') drawList(r.cat);
+          else {   // на странице статьи экран не дёргаем — только обновляем разделы и «Другие новости»
+            drawHeader(false, artCat);
+            var box = view.querySelector('.art');
+            if (box && box.querySelector('.body')) { fillOthers(box, r.id); }
+          }
         })
         .catch(function (e) {
-          if (!items.length) view.innerHTML = '';
           upd.className = 'foot err';
           upd.textContent = 'Не удалось загрузить новости (' + e.message + ')';
+          if (!loaded && route().page === 'list') { view.innerHTML = ''; ready(); }
         });
     }
 
-    window.addEventListener('hashchange', function () { render(true); });
+    root.addEventListener('click', onClick);
+    window.addEventListener('popstate', onUrlChange);
+    window.addEventListener('hashchange', onUrlChange);
+    var timer = setInterval(load, 120000);
+    // ушли с лендинга на другую страницу сайта — убираем за собой title, canonical и микроразметку
+    var guard = setInterval(function () { if (!document.documentElement.contains(root)) window.__mbnStop(); }, 1500);
+
+    window.__mbnStop = function () {
+      clearInterval(timer); clearInterval(guard);
+      root.removeEventListener('click', onClick);
+      window.removeEventListener('popstate', onUrlChange);
+      window.removeEventListener('hashchange', onUrlChange);
+      Object.keys(tags).forEach(dropTag);
+      dropLd();
+      if (origTitle !== null) document.title = origTitle;
+      window.__mbnStop = null;
+    };
+
+    render(false);
     load();
-    setInterval(load, 120000);
   })();
   </script>
 </div>

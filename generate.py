@@ -12,6 +12,10 @@
   a/<id>.json    — полная статья: те же поля + body (список абзацев)
   img/<id>.jpg   — картинка (до 1024px), img/<id>_s.jpg — миниатюра для ленты
   state.json     — какие новости уже разобраны (чтобы не брать одно и то же дважды)
+  archive.json   — все живые статьи за ARCHIVE_DAYS дней (лента короче: в ней только последние KEEP)
+  sitemap.xml    — карта сайта для поисковиков, пересобирается при каждом запуске
+
+id статьи = её ЧПУ-адрес (транслит заголовка), например sbornaya-rossii-obygrala-iran.
 """
 import base64, calendar, datetime, hashlib, html, io, json, os, pathlib, re, time
 from concurrent.futures import ThreadPoolExecutor
@@ -37,6 +41,14 @@ MAX_NEW = int(os.getenv("MAX_NEW", "1"))  # сколько новостей пу
 MAX_AGE_H = 3        # берём только новости не старше стольких часов
 PER_SOURCE = 12      # сколько последних записей смотреть на каждом сайте
 KEEP = 150           # сколько новостей хранить в ленте (старые удаляются вместе с картинками)
+ARCHIVE_DAYS = 30    # сколько дней статья и её картинки остаются доступны по своему адресу (для индексации)
+# Адреса на сайте — должны совпадать с настройками CONFIG в news.txt. Нужны только для sitemap.xml.
+SITE_LIST_URL = os.getenv("SITE_LIST_URL", "https://melbet.ru/ru/pages/melbetpremiumsize")
+SITE_NEWS_URL = os.getenv("SITE_NEWS_URL", SITE_LIST_URL + "?news={slug}")
+SITE_CAT_URL = os.getenv("SITE_CAT_URL", SITE_LIST_URL + "?cat={slug}")
+CAT_SLUGS = {"Футбол": "football", "Хоккей": "hockey", "Баскетбол": "basketball", "Теннис": "tennis",
+             "Фигурное катание": "figure-skating", "Волейбол": "volleyball", "Биатлон": "biathlon",
+             "Единоборства": "martial-arts", "Автоспорт": "motorsport", "Киберспорт": "esports", "Другое": "other"}
 CATEGORIES = ["Футбол", "Хоккей", "Баскетбол", "Теннис", "Фигурное катание", "Волейбол", "Биатлон", "Единоборства",
               "Автоспорт", "Киберспорт", "Другое"]
 TEXT_MODEL = os.getenv("TEXT_MODEL", "openai/gpt-4.1-mini")
@@ -61,6 +73,9 @@ IMG_DIR = DATA_DIR / "img"
 ART_DIR = DATA_DIR / "a"
 INDEX = DATA_DIR / "news.json"
 STATE = DATA_DIR / "state.json"
+ARCHIVE = DATA_DIR / "archive.json"
+SITEMAP = DATA_DIR / "sitemap.xml"
+TAKEN = set()        # занятые адреса статей (заполняется в main)
 IMG_DIR.mkdir(parents=True, exist_ok=True)
 ART_DIR.mkdir(parents=True, exist_ok=True)
 NOW = time.time()
@@ -106,6 +121,45 @@ def parse_time(s):
         return datetime.datetime.fromisoformat(s.strip().replace("Z", "+00:00")).timestamp()
     except Exception:
         return None
+
+
+TRANSLIT = dict(zip("абвгдеёжзийклмнопрстуфхцчшщъыьэюя",
+                    ["a", "b", "v", "g", "d", "e", "e", "zh", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u",
+                     "f", "h", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya"]))
+
+
+def slugify(title):
+    """ЧПУ из заголовка: «Сборная России обыграла Иран» -> sbornaya-rossii-obygrala-iran (уникально)."""
+    text = "".join(TRANSLIT.get(ch, ch) for ch in title.lower())
+    words = [w for w in re.split(r"[^a-z0-9]+", text) if w]
+    slug = ""
+    for w in words:
+        if slug and len(slug) + len(w) + 1 > 70:
+            break
+        slug = f"{slug}-{w}" if slug else w
+    slug = slug[:70] or "news"
+    base, n = slug, 2
+    while slug in TAKEN:
+        slug, n = f"{base}-{n}", n + 1
+    TAKEN.add(slug)
+    return slug
+
+
+def write_sitemap(archive):
+    def url(loc, lastmod):
+        return f"  <url><loc>{html.escape(loc)}</loc><lastmod>{lastmod}</lastmod></url>"
+
+    archive = sorted(archive, key=lambda a: a["published"], reverse=True)
+    newest = archive[0]["published"] if archive else iso(NOW)
+    rows = [url(SITE_LIST_URL, newest)]
+    for cat in CATEGORIES:
+        dates = [a["published"] for a in archive if a["category"] == cat]
+        if dates:
+            rows.append(url(SITE_CAT_URL.format(slug=CAT_SLUGS[cat]), dates[0]))
+    rows += [url(SITE_NEWS_URL.format(slug=a["id"]), a["published"]) for a in archive]
+    SITEMAP.write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
+                       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+                       + "\n".join(rows) + "\n</urlset>\n", "utf-8")
 
 
 # ---------- 1. сбор свежих заголовков ----------
@@ -309,7 +363,6 @@ def process(group):
     for c in items:
         text, _ = article(c["link"])
         sources.append({"source": c["source"], "title": c["title"], "summary": c["summary"], "text": text})
-    nid = items[0]["id"]
     try:
         art = rewrite(sources)
         ok, problems = factcheck(sources, art)
@@ -326,6 +379,7 @@ def process(group):
 
     # время публикации — момент выхода у нас: свежая новость всегда встаёт в начало ленты
     art.pop("used", None)
+    nid = slugify(art["title"])                           # адрес статьи на сайте
     art.update({"id": nid, "published": iso(NOW), "image": None, "thumb": None})
     try:
         art["image"], art["thumb"] = make_image(art.pop("image_prompt"), nid)
@@ -345,8 +399,10 @@ def main():
     state = json.loads(STATE.read_text("utf-8")) if STATE.exists() else {}
     state.setdefault("used", {})
     state.setdefault("first_seen", {})
-    for i in index:                                       # уже опубликованное повторно не берём
-        state["used"].setdefault(i["id"], NOW)
+    # архив: всё, что доступно по своему адресу (лента — только его свежая часть)
+    archive = json.loads(ARCHIVE.read_text("utf-8")) if ARCHIVE.exists() else \
+        [{k: i[k] for k in ("id", "title", "category", "published")} for i in index]
+    TAKEN.update(a["id"] for a in archive)
 
     cands = collect(state)
     groups = edit(cands, [i["title"] for i in index[:60]]) if cands else []
@@ -374,6 +430,7 @@ def main():
             published += 1
             (ART_DIR / f"{art['id']}.json").write_text(json.dumps(art, ensure_ascii=False, indent=1), "utf-8")
             index.append({k: art[k] for k in ("id", "title", "lead", "category", "published", "image", "thumb")})
+            archive.append({k: art[k] for k in ("id", "title", "category", "published")})
 
     index.sort(key=lambda i: i["published"], reverse=True)
     index = index[:KEEP]
@@ -384,8 +441,15 @@ def main():
         state[key] = {k: v for k, v in state[key].items() if NOW - v < 3 * 86400}
     STATE.write_text(json.dumps(state), "utf-8")
 
-    # удаляем картинки и статьи, которые выпали из ленты
-    ids = {i["id"] for i in index}
+    # статьи старше ARCHIVE_DAYS уходят из архива; sitemap пересобираем
+    in_feed = {i["id"] for i in index}
+    limit = iso(NOW - ARCHIVE_DAYS * 86400)
+    archive = [a for a in archive if a["published"] >= limit or a["id"] in in_feed]
+    ARCHIVE.write_text(json.dumps(archive, ensure_ascii=False, indent=1), "utf-8")
+    write_sitemap(archive)
+
+    # удаляем картинки и статьи, которых больше нет в архиве
+    ids = {a["id"] for a in archive} | in_feed
     for f in list(IMG_DIR.iterdir()) + list(ART_DIR.iterdir()):
         if f.name != ".gitkeep" and f.stem.removesuffix("_s") not in ids:
             f.unlink()
