@@ -96,7 +96,8 @@
     // файл открыт с диска (превью), а не с сайта — адреса с ? там не работают, используем #
     if (!/^https?:$/.test(location.protocol)) CONFIG.urlMode = 'hash';
 
-    var BASE = 'https://raw.githubusercontent.com/anastasiyamakarenko/melbet-news/main/data/';
+    // откуда берутся новости и картинки (облачное хранилище). При смене домена облака меняется только эта строка
+    var BASE = 'https://pub-98c67cf30bef4735b815a47638c2625d.r2.dev/';
     // раздел: название в данных, кусок адреса, заголовок h1 страницы раздела
     var CATS = [
       ['Футбол', 'football', 'Новости футбола'], ['Хоккей', 'hockey', 'Новости хоккея'],
