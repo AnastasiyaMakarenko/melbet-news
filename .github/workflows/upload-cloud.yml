@@ -1,0 +1,25 @@
+name: upload-cloud
+
+# Ручная выгрузка уже готовых новостей и картинок из data/ в облако.
+# Новости НЕ генерирует и OpenRouter не использует — только копирует файлы.
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install boto3
+      - run: python upload.py
+        env:
+          R2_BUCKET: mb-news
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}

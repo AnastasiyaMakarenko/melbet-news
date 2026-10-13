@@ -60,6 +60,14 @@ jobs:
           git commit -m "news update" || exit 0
           git pull --rebase
           git push
+      - name: Выгрузить новости и картинки в облако
+        if: steps.chain.outputs.skip != 'true'
+        run: python upload.py
+        env:
+          R2_BUCKET: mb-news
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
 
       - name: Поставить следующий запуск через ~10 минут
         if: always() && steps.chain.outputs.skip != 'true'
