@@ -43,9 +43,10 @@ PER_SOURCE = 12      # сколько последних записей смот
 KEEP = 150           # сколько новостей хранить в ленте (старые удаляются вместе с картинками)
 ARCHIVE_DAYS = 3650  # сколько дней статья и её картинки остаются доступны по своему адресу (10 лет = практически не удаляем)
 # Адреса на сайте — должны совпадать с настройками CONFIG в news.txt. Нужны только для sitemap.xml.
-SITE_LIST_URL = os.getenv("SITE_LIST_URL", "https://melbet.ru/ru/pages/melbetpremiumsize")
-SITE_NEWS_URL = os.getenv("SITE_NEWS_URL", SITE_LIST_URL + "?news={slug}")
-SITE_CAT_URL = os.getenv("SITE_CAT_URL", SITE_LIST_URL + "?cat={slug}")
+# ЧПУ без параметров: /ru/news — все новости, /ru/news/football — раздел, /ru/news/<адрес> — новость
+SITE_LIST_URL = os.getenv("SITE_LIST_URL", "https://melbet.ru/ru/news")
+SITE_NEWS_URL = os.getenv("SITE_NEWS_URL", SITE_LIST_URL + "/{slug}")
+SITE_CAT_URL = os.getenv("SITE_CAT_URL", SITE_LIST_URL + "/{slug}")
 CAT_SLUGS = {"Футбол": "football", "Хоккей": "hockey", "Баскетбол": "basketball", "Теннис": "tennis",
              "Фигурное катание": "figure-skating", "Волейбол": "volleyball", "Биатлон": "biathlon",
              "Единоборства": "martial-arts", "Автоспорт": "motorsport", "Киберспорт": "esports", "Другое": "other"}
@@ -374,6 +375,9 @@ def process(group):
         if not ok:
             print("Не опубликована (фактчек не пройден):", items[0]["title"], problems)
             return None
+        if len(art["body"]) < 2:                          # новость без нормального текста не публикуем
+            print("Не опубликована (слишком мало текста):", items[0]["title"])
+            return None
     except Exception as err:
         print("Новость пропущена:", items[0]["link"], err)
         return None
@@ -404,6 +408,7 @@ def main():
     archive = json.loads(ARCHIVE.read_text("utf-8")) if ARCHIVE.exists() else \
         [{k: i[k] for k in ("id", "title", "category", "published")} for i in index]
     TAKEN.update(a["id"] for a in archive)
+    TAKEN.update(CAT_SLUGS.values())                      # адрес новости не может совпасть с адресом раздела
 
     cands = collect(state)
     groups = edit(cands, [i["title"] for i in index[:60]]) if cands else []
