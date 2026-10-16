@@ -470,7 +470,8 @@ def main():
     # удаляем картинки и статьи, которых больше нет в архиве
     ids = {a["id"] for a in archive} | in_feed
     for f in list(IMG_DIR.iterdir()) + list(ART_DIR.iterdir()):
-        if f.name != ".gitkeep" and f.stem.removesuffix("_s") not in ids:
+        # img/<id>.jpg, img/<id>_s.jpg, img/<id>-v2.jpg (перегенерированная картинка) — всё это файлы статьи <id>
+        if f.name != ".gitkeep" and re.sub(r"(-v\d+)?(_s)?$", "", f.stem) not in ids:
             f.unlink()
 
 

@@ -6,7 +6,7 @@
     #mbn *{box-sizing:border-box}
     #mbn a{color:inherit;text-decoration:none}
     #mbn h1,#mbn h2,#mbn h3,#mbn p,#mbn ul,#mbn li,#mbn figure{margin:0;padding:0;color:var(--fg);font-family:inherit}
-    #mbn .w{max-width:980px;margin:0 auto}
+    #mbn .w{max-width:1100px;margin:0 auto}
 
     /* шапка и разделы */
     #mbn .top{border-bottom:1px solid var(--line);padding:24px 0 0}
@@ -24,6 +24,24 @@
     #mbn .meta{font-size:13px;color:var(--muted);margin-bottom:6px}
     #mbn .cat{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-size:12px}
     #mbn .img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;background:var(--card);border-radius:6px}
+
+    /* верхний блок: главная новость + две рядом + колонка «Самое свежее» */
+    #mbn .top-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:32px;padding:24px 0;border-bottom:1px solid var(--line)}
+    #mbn .feat{position:relative;display:block;border-radius:8px;overflow:hidden;background:var(--card)}
+    #mbn .feat .img{aspect-ratio:16/9;border-radius:0}
+    #mbn .feat .cap{position:absolute;left:0;right:0;bottom:0;padding:90px 24px 22px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.65) 35%,rgba(0,0,0,.95))}
+    #mbn .feat .ttl{font-size:30px;line-height:1.18;font-weight:800}
+    #mbn .feat p{font-size:16px;color:#e6e6e6;line-height:1.5;margin-top:8px}
+    #mbn .feat .meta{color:#d0d0d0}
+    #mbn .pair{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px}
+    #mbn .mid .img{margin-bottom:10px}
+    #mbn .mid .ttl{font-size:18px;line-height:1.3;font-weight:700}
+    #mbn .side-t,#mbn .sec-t{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--fg);padding-bottom:10px;border-bottom:2px solid var(--accent)}
+    #mbn .sec-t{margin-top:32px}
+    #mbn .mini{display:block;padding:13px 0;border-bottom:1px solid var(--line)}
+    #mbn .mini .meta{margin-bottom:4px}
+    #mbn .mini .ttl{font-size:15px;line-height:1.35;font-weight:600}
+    #mbn .feat:hover .ttl,#mbn .mid:hover .ttl,#mbn .mini:hover .ttl{color:var(--accent)}
 
     /* главная новость */
     #mbn .hero{display:grid;grid-template-columns:3fr 2fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line)}
@@ -53,7 +71,15 @@
     #mbn .foot{margin-top:32px;font-size:13px;color:var(--muted)}
     #mbn .err{color:#ff6b6b}
 
+    @media (max-width:900px){
+      #mbn .top-grid{grid-template-columns:1fr;gap:24px}
+    }
     @media (max-width:700px){
+      #mbn .feat .ttl{font-size:21px}
+      #mbn .feat .cap{padding:60px 16px 14px}
+      #mbn .feat p{display:none}
+      #mbn .pair{grid-template-columns:1fr 1fr;gap:14px}
+      #mbn .mid .ttl{font-size:15px}
       #mbn .logo{font-size:24px}
       #mbn .h1c{font-size:22px}
       #mbn .hero{grid-template-columns:1fr;gap:14px}
@@ -283,6 +309,30 @@
       return m;
     }
 
+    function feat(n) {   // главная новость: заголовок поверх картинки
+      var a = link('feat', urlNews(n.id));
+      a.appendChild(img(n.image, n.title, true));
+      var c = el('div', 'cap');
+      c.appendChild(metaLine(n));
+      c.appendChild(el('div', 'ttl', n.title));
+      if (n.lead) c.appendChild(el('p', null, n.lead));
+      a.appendChild(c);
+      return a;
+    }
+    function mid(n) {    // две новости под главной
+      var a = link('mid', urlNews(n.id));
+      a.appendChild(img(n.thumb || n.image, n.title));
+      a.appendChild(metaLine(n));
+      a.appendChild(el('div', 'ttl', n.title));
+      return a;
+    }
+    function mini(n) {   // строка в колонке «Самое свежее»: время и заголовок, без картинки
+      var a = link('mini', urlNews(n.id));
+      a.appendChild(metaLine(n));
+      a.appendChild(el('div', 'ttl', n.title));
+      return a;
+    }
+
     function card(n, big) {
       var a = link(big ? 'hero' : 'row', urlNews(n.id));
       a.appendChild(img(big ? n.image : (n.thumb || n.image), n.title, big));
@@ -322,9 +372,27 @@
       if (cat) view.appendChild(el('h1', 'h1c', cat.h1));
       if (!list.length) view.appendChild(el('div', 'empty', loaded ? 'Новостей пока нет' : 'Загружаем новости…'));
       else {
-        view.appendChild(card(list[0], true));
-        list.slice(1, shown).forEach(function (n) { view.appendChild(card(n)); });
-        if (list.length > shown) {
+        var rest;
+        if (list.length >= 5) {
+          var grid = el('div', 'top-grid'), left = el('div'), side = el('aside');
+          left.appendChild(feat(list[0]));
+          var pair = el('div', 'pair');
+          pair.appendChild(mid(list[1]));
+          pair.appendChild(mid(list[2]));
+          left.appendChild(pair);
+          side.appendChild(el('div', 'side-t', 'Самое свежее'));
+          list.slice(3, 9).forEach(function (n) { side.appendChild(mini(n)); });
+          grid.appendChild(left);
+          grid.appendChild(side);
+          view.appendChild(grid);
+          rest = list.slice(9, shown + 9);
+          if (rest.length) view.appendChild(el('div', 'sec-t', 'Ещё новости'));
+        } else {                                   // мало новостей (например, в разделе) — простая лента
+          view.appendChild(card(list[0], true));
+          rest = list.slice(1, shown);
+        }
+        rest.forEach(function (n) { view.appendChild(card(n)); });
+        if (list.length > shown + (list.length >= 5 ? 9 : 0)) {
           var b = el('button', 'more', 'Показать ещё');
           b.type = 'button';
           b.onclick = function () { shown += PAGE; drawList(cat); };
@@ -431,13 +499,23 @@
     /* ---------- прокрутка: экран никогда не прыгает вниз ---------- */
     // высота закреплённой шапки сайта (если она есть), чтобы она не закрывала начало новости
     function fixedTop() {
-      var e = document.elementFromPoint(window.innerWidth / 2, 2), h = 0;
-      while (e && e !== document.body && e !== document.documentElement) {
-        var pos = getComputedStyle(e).position;
-        if ((pos === 'fixed' || pos === 'sticky') && !root.contains(e)) { h = e.getBoundingClientRect().bottom; break; }
-        e = e.parentElement;
-      }
-      return Math.max(0, h);
+      var w = window.innerWidth || document.documentElement.clientWidth, h = 0, seen = [];
+      var cand = [];
+      [0.2, 0.5, 0.8].forEach(function (x) {
+        if (document.elementsFromPoint && w) cand = cand.concat(document.elementsFromPoint(w * x, 2));
+      });
+      cand = cand.concat([].slice.call(document.querySelectorAll('header, [class*="header"], [class*="Header"]')));
+      cand.forEach(function (e) {
+        for (; e && e !== document.body && e !== document.documentElement; e = e.parentElement) {
+          if (seen.indexOf(e) >= 0 || root.contains(e)) return;
+          seen.push(e);
+          var pos = getComputedStyle(e).position, r = e.getBoundingClientRect();
+          if ((pos === 'fixed' || pos === 'sticky') && r.top <= 1 && r.bottom > 0 && r.height < window.innerHeight * 0.4) {
+            h = Math.max(h, r.bottom); return;
+          }
+        }
+      });
+      return h;
     }
     // поднять экран к началу блока новостей — только если пользователь уже пролистал ниже него
     function upToTop() {
