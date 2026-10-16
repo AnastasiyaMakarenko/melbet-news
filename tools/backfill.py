@@ -19,6 +19,31 @@ def day_of(ts):
     return datetime.datetime.fromtimestamp(ts, MSK).date()
 
 
+# архив по дням: у RSS только последние 2 дня, а в карте сайта «Советского спорта» — около месяца новостей с датами
+SITEMAP = ("Советский спорт", "https://www.sovsport.ru/sitemap-news.xml", "https://www.sovsport.ru/news")
+
+
+def from_sitemap():
+    name, url, src_url = SITEMAP
+    try:
+        xml = g.get(url)
+    except Exception as err:
+        print(f"  {name} (архив): не удалось: {err}")
+        return []
+    out = []
+    for loc, mod in g.re.findall(r"<url>\s*<loc>\s*([^<]+?)\s*</loc>\s*<lastmod>\s*([^<]+?)\s*</lastmod>", xml):
+        ts = g.parse_time(mod)
+        if not ts or "/news/" not in loc:
+            continue
+        slug = loc.rstrip("/").rsplit("/", 1)[-1]
+        # заголовка в карте нет — даём редактору адрес новости (транслит), полный текст возьмём со страницы
+        out.append({"link": loc, "title": slug.replace("-", " "), "summary": "", "ts": ts,
+                    "source": name, "src_url": src_url})
+    if out:
+        print(f"  {name} (архив): {len(out)} записей, с {day_of(min(c['ts'] for c in out))} по {day_of(max(c['ts'] for c in out))}")
+    return out
+
+
 def candidates(state, published_titles):
     g.PER_SOURCE = 1000                                   # берём всю ленту источника, а не только свежие записи
     raw = []
@@ -34,6 +59,7 @@ def candidates(state, published_titles):
         if dated:
             print(f"  {src['name']}: {len(dated)} записей, с {day_of(min(c['ts'] for c in dated))} по {day_of(max(c['ts'] for c in dated))}")
         raw += dated
+    raw += from_sitemap()
     today = day_of(g.NOW)
     days = [today - datetime.timedelta(days=i) for i in range(1, DAYS + 1)]
     by_day = collections.defaultdict(list)
@@ -57,7 +83,8 @@ def pick(cands, published_titles):
         "Выбери до 5 самых значимых и интересных широкой аудитории СПОРТИВНЫХ событий этого дня (результаты матчей, "
         "турниры, трансферы, назначения, травмы, громкие заявления). По возможности — разные виды спорта. "
         "Не бери рекламу, ставки, прогнозы, кино, лайфстайл, колонки-мнения, подборки, а также то, что уже есть среди "
-        "опубликованных. Для каждого события перечисли номера ВСЕХ заголовков про это же событие. "
+        "опубликованных. Некоторые заголовки даны транслитом из адреса страницы — читай их как русский текст. "
+        "Для каждого события перечисли номера ВСЕХ заголовков про это же событие. "
         'Верни JSON {"picks":[{"items":[n,...]}]} — от самого важного к менее важному.',
         {"candidates": [{"n": i, "source": c["source"], "title": c["title"]} for i, c in enumerate(cands)],
          "published": published_titles})
@@ -98,12 +125,17 @@ def main():
         for grp in groups:
             if done >= PER_DAY:
                 break
+            # точное время публикации — со страницы новости (в карте сайта может стоять время правки)
+            times = []
+            for c in grp["items"][:3]:
+                _, ts = g.article(c["link"])
+                times.append(ts or c["ts"])
             art = g.process(grp)
             for c in grp["items"]:
                 state["used"][c["id"]] = g.NOW
             if not art:
                 continue
-            art["published"] = g.iso(min(c["ts"] for c in grp["items"]))   # настоящее время публикации события
+            art["published"] = g.iso(min(times))           # настоящее время публикации события
             (g.ART_DIR / f"{art['id']}.json").write_text(json.dumps(art, ensure_ascii=False, indent=1), "utf-8")
             index.append({k: art[k] for k in ("id", "title", "lead", "category", "published", "image", "thumb")})
             archive.append({k: art[k] for k in ("id", "title", "category", "published")})
