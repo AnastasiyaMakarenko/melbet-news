@@ -1,0 +1,43 @@
+name: backfill
+
+# Разово: добавить новости за прошедшие дни (по 2 на день). mode=dry — только посмотреть, что есть (бесплатно)
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "dry — только проверить; run — опубликовать"
+        default: "dry"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python tools/backfill.py ${{ inputs.mode == 'run' && 'run' || 'dry' }}
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TEXT_MODEL: openai/gpt-4.1-mini
+          IMAGE_MODEL: openai/gpt-5-image-mini
+      - if: inputs.mode == 'run'
+        run: |
+          git config user.name "news-bot"
+          git config user.email "news-bot@users.noreply.github.com"
+          git add -A data
+          git commit -m "backfill news" || exit 0
+          git pull --rebase
+          git push
+      - if: inputs.mode == 'run'
+        run: python upload.py
+        env:
+          R2_BUCKET: mb-news
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}

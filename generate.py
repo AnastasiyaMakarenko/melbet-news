@@ -275,15 +275,15 @@ def article(link):
 
 # правила для картинок: живые, разные, по сути конкретной новости — но без людей (требование проекта)
 IMAGE_RULES = (
-    "describe ONE specific photorealistic scene that shows the essence of THIS particular news through objects and details, "
-    "not a generic wide shot of an empty stadium. Pick a concrete subject tied to the story, for example: transfer or contract — "
-    "a pen on a signed contract next to a folded scarf in the club colours; injury — a medical bag, ice pack and tape at the edge "
-    "of the pitch; victory or title — a trophy under falling confetti; record — a ball hitting the back of the net; hockey — "
-    "a puck and ice spray close-up at the blade of a skate; tennis — a ball kicking up chalk on the line; volleyball — a ball "
-    "slamming into the net; press statement — microphones on a table in a press room; season start — fresh field lines being "
-    "painted, floodlights switching on; national team — kits hanging in a locker room. Vary the shot every time: macro close-up, "
-    "low angle, top-down, motion blur, shallow depth of field; vary light and weather: night floodlights, golden hour, rain, "
-    "snow, flare smoke, stadium lights bokeh. Add energy and motion. Use club or national colours where relevant. "
+    "describe ONE realistic scene that looks like a real editorial news photo for THIS story (shot on a professional camera, "
+    "natural colours, believable light, no artistic or fantasy effects). Show the real setting and equipment of this sport "
+    "with a detail that fits the story, for example: match result — the ball in the goal net at a floodlit stadium; transfer "
+    "or contract — a pen and documents on a desk in a club office with the training pitch visible through the window; "
+    "coach news — a tactics board and whistle on the bench at the edge of the pitch; injury — a medical bag and stretcher at "
+    "the touchline; trophy or title — the trophy on a podium in an arena; hockey — puck and stick on the ice at the boards; "
+    "tennis — balls and racket on the court by the net; basketball — a ball on the parquet under the hoop; volleyball — "
+    "a ball at the net in a sports hall; national team — kits hanging in a locker room. Use medium or wide shots more often "
+    "than extreme close-ups; vary angle, time of day and weather so images differ, keep it universal and calm, not staged. "
     "STRICTLY no people and no body parts: no faces, hands, silhouettes, crowds or players; no text, letters, numbers, logos or flags."
 )
 
@@ -361,7 +361,7 @@ def make_image(prompt, nid):
                 "model": IMAGE_MODEL,
                 "modalities": ["image", "text"],
                 "messages": [{"role": "user", "content":
-                    "Generate a landscape 3:2 photorealistic editorial sports photo, vivid, dynamic, high detail. " + prompt +
+                    "Generate a landscape 3:2 photorealistic editorial sports news photo, natural and realistic, high detail. " + prompt +
                     " Absolutely no people or body parts, no faces, hands, silhouettes or crowds, no text, numbers or logos."}],
             })
             url = msg["images"][0]["image_url"]["url"]  # data:image/png;base64,....
