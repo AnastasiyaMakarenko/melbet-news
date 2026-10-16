@@ -273,6 +273,20 @@ def article(link):
     return text, parse_time(m.group(1)) if m else None
 
 
+# правила для картинок: живые, разные, по сути конкретной новости — но без людей (требование проекта)
+IMAGE_RULES = (
+    "describe ONE specific photorealistic scene that shows the essence of THIS particular news through objects and details, "
+    "not a generic wide shot of an empty stadium. Pick a concrete subject tied to the story, for example: transfer or contract — "
+    "a pen on a signed contract next to a folded scarf in the club colours; injury — a medical bag, ice pack and tape at the edge "
+    "of the pitch; victory or title — a trophy under falling confetti; record — a ball hitting the back of the net; hockey — "
+    "a puck and ice spray close-up at the blade of a skate; tennis — a ball kicking up chalk on the line; volleyball — a ball "
+    "slamming into the net; press statement — microphones on a table in a press room; season start — fresh field lines being "
+    "painted, floodlights switching on; national team — kits hanging in a locker room. Vary the shot every time: macro close-up, "
+    "low angle, top-down, motion blur, shallow depth of field; vary light and weather: night floodlights, golden hour, rain, "
+    "snow, flare smoke, stadium lights bokeh. Add energy and motion. Use club or national colours where relevant. "
+    "STRICTLY no people and no body parts: no faces, hands, silhouettes, crowds or players; no text, letters, numbers, logos or flags."
+)
+
 REWRITE_RULES = (
     "Ты редактор спортивного новостного сайта. Напиши новость на русском полностью своими словами (рерайт): "
     "другая структура и порядок фраз, не копируй предложения из источников. Нейтрально, без кликбейта и оценок от себя. "
@@ -291,8 +305,7 @@ REWRITE_RULES = (
     "title — заголовок до 90 символов; lead — 1–2 предложения, суть; "
     "body — массив из 2–6 абзацев полного текста (лид не повторяй); "
     f"category — ровно одно из: {', '.join(CATEGORIES)}; "
-    "image_prompt — на английском, описание атмосферной фотореалистичной иллюстрации к новости БЕЗ людей: "
-    "стадион, поле, мяч, ворота, трибуны, экипировка, табло и т.п.; без людей, лиц, силуэтов, текста, логотипов и флагов."
+    "image_prompt — на английском: " + IMAGE_RULES
 )
 
 FACTCHECK_RULES = (
@@ -348,8 +361,8 @@ def make_image(prompt, nid):
                 "model": IMAGE_MODEL,
                 "modalities": ["image", "text"],
                 "messages": [{"role": "user", "content":
-                    "Generate a landscape 3:2 photorealistic image. " + prompt +
-                    " Absolutely no people, no faces, no silhouettes, no text, no logos."}],
+                    "Generate a landscape 3:2 photorealistic editorial sports photo, vivid, dynamic, high detail. " + prompt +
+                    " Absolutely no people or body parts, no faces, hands, silhouettes or crowds, no text, numbers or logos."}],
             })
             url = msg["images"][0]["image_url"]["url"]  # data:image/png;base64,....
             return save_images(Image.open(io.BytesIO(base64.b64decode(url.split(",", 1)[1]))), nid)

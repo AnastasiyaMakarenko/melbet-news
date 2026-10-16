@@ -28,10 +28,15 @@ def main():
 
     plan = []                                              # (файл, ключ в облаке, кэш)
     for nid in ids:
-        for name, cache in ((f"img/{nid}.jpg", CACHE_FOREVER), (f"img/{nid}_s.jpg", CACHE_FOREVER),
-                            (f"a/{nid}.json", CACHE_ARTICLE)):
+        art_file = DATA / "a" / f"{nid}.json"
+        if not art_file.exists():
+            continue
+        art = json.loads(art_file.read_text("utf-8"))
+        # картинки — по именам, записанным в самой статье (после перегенерации имя меняется)
+        for name in dict.fromkeys(x for x in (art.get("image"), art.get("thumb")) if x):
             if (DATA / name).exists():
-                plan.append((DATA / name, name, cache))
+                plan.append((DATA / name, name, CACHE_FOREVER))
+        plan.append((art_file, f"a/{nid}.json", CACHE_ARTICLE))
     for name in ("archive.json", "sitemap.xml", "news.json"):   # лента — последней
         if (DATA / name).exists():
             plan.append((DATA / name, name, CACHE_SHORT))
