@@ -1,6 +1,24 @@
 {
- "updated_at": "2026-10-16T18:28:46+00:00",
+ "updated_at": "2026-10-16T18:39:32+00:00",
  "items": [
+  {
+   "id": "manchester-city-mozhet-byt-otstranen-ot-uchastiya-v-evrokubkah-na",
+   "title": "Manchester City может быть отстранён от участия в еврокубках на несколько лет",
+   "lead": "Рассматривается возможность дисквалификации Манчестер Сити от участия в европейских клубных турнирах на срок от семи до десяти лет.",
+   "category": "Футбол",
+   "published": "2026-10-15T20:57:00+00:00",
+   "image": "img/manchester-city-mozhet-byt-otstranen-ot-uchastiya-v-evrokubkah-na.jpg",
+   "thumb": "img/manchester-city-mozhet-byt-otstranen-ot-uchastiya-v-evrokubkah-na_s.jpg"
+  },
+  {
+   "id": "yuventus-i-milan-oderzhali-pobedy-v-2-m-ture-ligi-evropy",
+   "title": "«Ювентус» и «Милан» одержали победы в 2-м туре Лиги Европы",
+   "lead": "В матчах второго тура группового этапа Лиги Европы «Ювентус» выиграл у «Сельты», а «Милан» разгромил «Зальцбург».",
+   "category": "Футбол",
+   "published": "2026-10-15T18:40:30+00:00",
+   "image": "img/yuventus-i-milan-oderzhali-pobedy-v-2-m-ture-ligi-evropy.jpg",
+   "thumb": "img/yuventus-i-milan-oderzhali-pobedy-v-2-m-ture-ligi-evropy_s.jpg"
+  },
   {
    "id": "real-pobedil-romu-v-gostyah-otygravshis-s-1-3-v-lige-chempionov",
    "title": "«Реал» победил «Рому» в гостях, отыгравшись с 1:3 в Лиге чемпионов",
@@ -38,6 +56,15 @@
    "thumb": "img/aleksey-batrakov-zabil-barselone-v-matche-ligi-chempionov_s.jpg"
   },
   {
+   "id": "anton-miranchuk-mozhet-vernutsya-v-lokomotiv",
+   "title": "Антон Миранчук может вернуться в «Локомотив»",
+   "lead": "Антон Миранчук рассматривает возможность возвращения в российский клуб «Локомотив».",
+   "category": "Футбол",
+   "published": "2026-10-12T19:35:00+00:00",
+   "image": "img/anton-miranchuk-mozhet-vernutsya-v-lokomotiv.jpg",
+   "thumb": "img/anton-miranchuk-mozhet-vernutsya-v-lokomotiv_s.jpg"
+  },
+  {
    "id": "minskoe-dinamo-obygralo-shanhayskih-drakonov-v-matche-khl",
    "title": "Минское «Динамо» обыграло «Шанхайских Драконов» в матче КХЛ",
    "lead": "Минское «Динамо» одержало победу над китайским клубом «Шанхайские Драконы» в выездном матче регулярного чемпионата КХЛ со счётом 3:2.",
@@ -72,6 +99,24 @@
    "published": "2026-10-10T20:30:33+00:00",
    "image": "img/rossiyskie-yuniory-vyshli-v-final-gran-pri-isu-vo-vseh-distsiplinah.jpg",
    "thumb": "img/rossiyskie-yuniory-vyshli-v-final-gran-pri-isu-vo-vseh-distsiplinah_s.jpg"
+  },
+  {
+   "id": "pszh-vyigral-u-le-mana-golovin-sdelal-golevuyu-peredachu-za-monako-v",
+   "title": "ПСЖ выиграл у Ле-Мана, Головин сделал голевую передачу за Монако в Лиге 1",
+   "lead": "Парижский ПСЖ одержал третью победу подряд в Лиге 1, обыграв Ле-Ман, а Александр Головин отметился ассистом в матче Монако с Тулузой.",
+   "category": "Футбол",
+   "published": "2026-10-10T19:30:00+00:00",
+   "image": "img/pszh-vyigral-u-le-mana-golovin-sdelal-golevuyu-peredachu-za-monako-v.jpg",
+   "thumb": "img/pszh-vyigral-u-le-mana-golovin-sdelal-golevuyu-peredachu-za-monako-v_s.jpg"
+  },
+  {
+   "id": "tsska-oderzhal-desyatuyu-pobedu-podryad-obygrav-moskovskoe-dinamo",
+   "title": "ЦСКА одержал десятую победу подряд, обыграв московское «Динамо»",
+   "lead": "В матче регулярного чемпионата КХЛ ЦСКА выиграл у московского «Динамо» со счётом 5:2, оформив десятую победу подряд.",
+   "category": "Хоккей",
+   "published": "2026-10-09T18:56:07+00:00",
+   "image": "img/tsska-oderzhal-desyatuyu-pobedu-podryad-obygrav-moskovskoe-dinamo.jpg",
+   "thumb": "img/tsska-oderzhal-desyatuyu-pobedu-podryad-obygrav-moskovskoe-dinamo_s.jpg"
   },
   {
    "id": "sbornaya-rossii-obygrala-iran-so-schetom-2-0-blagodarya-dublyu",
