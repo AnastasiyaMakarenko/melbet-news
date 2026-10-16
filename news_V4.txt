@@ -7,6 +7,8 @@
     #mbn a{color:inherit;text-decoration:none}
     #mbn h1,#mbn h2,#mbn h3,#mbn p,#mbn ul,#mbn li,#mbn figure{margin:0;padding:0;color:var(--fg);font-family:inherit}
     #mbn .w{max-width:1100px;margin:0 auto}
+    /* защита от общих стилей сайта для header/nav/main/aside/article */
+    #mbn header,#mbn nav,#mbn main,#mbn aside,#mbn article,#mbn figure{position:static;inset:auto;float:none;width:auto;height:auto;min-height:0;max-height:none;background:none;box-shadow:none;transform:none;z-index:auto;display:block}
 
     /* шапка и разделы */
     #mbn .top{border-bottom:1px solid var(--line);padding:24px 0 0}
