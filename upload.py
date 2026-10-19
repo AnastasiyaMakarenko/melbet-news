@@ -10,7 +10,8 @@ import boto3
 
 DATA = pathlib.Path("data")
 BUCKET = os.environ["R2_BUCKET"]
-TYPES = {".json": "application/json; charset=utf-8", ".xml": "application/xml; charset=utf-8", ".jpg": "image/jpeg"}
+TYPES = {".json": "application/json; charset=utf-8", ".xml": "application/xml; charset=utf-8", ".jpg": "image/jpeg",
+         ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".gif": "image/gif"}
 # картинки не меняются никогда — браузер может хранить их год; лента и sitemap обновляются — держим минуту
 CACHE_FOREVER = "public, max-age=31536000, immutable"
 CACHE_SHORT = "public, max-age=60"
@@ -37,6 +38,12 @@ def main():
             if (DATA / name).exists():
                 plan.append((DATA / name, name, CACHE_FOREVER))
         plan.append((art_file, f"a/{nid}.json", CACHE_ARTICLE))
+    # баннеры: data/banners.json + картинки в data/banners/ (кэш 5 минут — баннер можно заменить тем же файлом)
+    for f in sorted((DATA / "banners").glob("*")) if (DATA / "banners").exists() else []:
+        if f.suffix.lower() in TYPES:
+            plan.append((f, f"banners/{f.name}", CACHE_ARTICLE))
+    if (DATA / "banners.json").exists():
+        plan.append((DATA / "banners.json", "banners.json", CACHE_ARTICLE))
     for name in ("archive.json", "sitemap.xml", "news.json"):   # лента — последней
         if (DATA / name).exists():
             plan.append((DATA / name, name, CACHE_SHORT))
@@ -51,7 +58,7 @@ def main():
         body = path.read_bytes()
         if remote.get(key) == hashlib.md5(body).hexdigest():
             continue                                       # в облаке уже лежит такой же файл
-        s3.put_object(Bucket=BUCKET, Key=key, Body=body, ContentType=TYPES[path.suffix], CacheControl=cache)
+        s3.put_object(Bucket=BUCKET, Key=key, Body=body, ContentType=TYPES[path.suffix.lower()], CacheControl=cache)
         sent += 1
         print("  загружен:", key)
     print(f"Облако: загружено {sent}, без изменений {len(plan) - sent}, всего новостей {len(ids)}")
