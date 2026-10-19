@@ -134,7 +134,8 @@
       siteOrigin: 'https://melbet.ru',
       homeUrl: 'https://melbet.ru/ru',
       author: 'Редакция Мелбет',
-      siteName: 'Мелбет'
+      siteName: 'Мелбет',
+      showEmptyAds: true   // true — пустые места под баннеры видны всегда (рамка с размером); false — скрыты, пока нет баннера
     };
     /* ============================================================================================ */
 
@@ -177,9 +178,9 @@
                 "wide": {"img": "banners/wide.jpg", "img_mobile": "banners/wide_m.jpg", "href": "https://…", "alt": "…"}}
        Размеры: side — 300×250 (колонка справа), wide — 728×90 на компьютере и 320×100 на телефоне
        (между блоками ленты и под текстом новости). Картинки лучше в 2 раза больше (600×500, 1456×180, 640×200).
-       Нет файла или места в нём — место не показывается. Посмотреть пустые места: добавить к адресу ?banners=preview */
+       Нет баннера — показывается пустая рамка с размером (если CONFIG.showEmptyAds = true, иначе место скрыто). */
     var AD_SIZES = {side: [300, 250], wide: [728, 90], wide_m: [320, 100]};
-    var banners = {}, adPreview = /[?&]banners=preview\b/.test(location.search);
+    var banners = {}, adPreview = CONFIG.showEmptyAds || /[?&]banners=preview\b/.test(location.search);
 
     var items = [], loaded = false, shown = PAGE, listScroll = 0, lastKey = '', lastHref = null, seq = 0, artCat = null, virtual = null;
 
