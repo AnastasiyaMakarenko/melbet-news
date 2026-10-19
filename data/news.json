@@ -2,15 +2,6 @@
  "updated_at": "2026-10-19T09:19:26+00:00",
  "items": [
   {
-   "id": "latsio-razgromil-yuventus-v-turine-so-schetom-3-0",
-   "title": "«Лацио» разгромил «Ювентус» в Турине — 3:0 в 7-м туре Серии А",
-   "lead": "«Лацио» на выезде обыграл «Ювентус» со счётом 3:0 в матче 7-го тура чемпионата Италии.",
-   "category": "Футбол",
-   "published": "2026-10-18T15:45:00+00:00",
-   "image": "img/latsio-razgromil-yuventus-v-turine-so-schetom-3-0-v3.jpg",
-   "thumb": "img/latsio-razgromil-yuventus-v-turine-so-schetom-3-0-v3_s.jpg"
-  },
-  {
    "id": "dinamo-obygralo-tsska-i-vozglavilo-turnirnuyu-tablitsu-rpl",
    "title": "«Динамо» обыграло ЦСКА 3:1 и возглавило РПЛ. Шварц: «В этом матче было всё»",
    "lead": "Московское «Динамо» победило ЦСКА со счётом 3:1 в матче 11-го тура чемпионата России и с 25 очками вышло на первое место в турнирной таблице.",
@@ -20,13 +11,13 @@
    "thumb": "img/dinamo-obygralo-tsska-i-vozglavilo-turnirnuyu-tablitsu-rpl-v2_s.jpg"
   },
   {
-   "id": "vashington-obygral-nyu-dzhersi-blagodarya-golevoy-peredache-ovechkina",
-   "title": "«Вашингтон» обыграл «Нью-Джерси» 4:2, Овечкин отдал голевую передачу",
-   "lead": "«Вашингтон Кэпиталз» победил «Нью-Джерси Дэвилз» со счётом 4:2 в матче регулярного чемпионата НХЛ, Александр Овечкин записал на свой счёт результативную передачу.",
-   "category": "Хоккей",
-   "published": "2026-10-17T18:06:00+00:00",
-   "image": "img/vashington-obygral-nyu-dzhersi-blagodarya-golevoy-peredache-ovechkina-v2.jpg",
-   "thumb": "img/vashington-obygral-nyu-dzhersi-blagodarya-golevoy-peredache-ovechkina-v2_s.jpg"
+   "id": "ne-po-muzhski-semak-o-konflikte-soboleva-i-sidibe-posle-volevoy-pobedy",
+   "title": "«Не по-мужски»: Семак — о конфликте Соболева и Сидибе после волевой победы «Зенита» над «Ахматом»",
+   "lead": "«Зенит» отыгрался и обыграл «Ахмат» со счётом 3:2 в матче 11-го тура РПЛ, а концовку встречи омрачил конфликт нападающего петербуржцев Александра Соболева с защитником грозненцев Калиду Сидибе. Главный тренер «Зенита» Сергей Семак встал на сторону своих игроков.",
+   "category": "Футбол",
+   "published": "2026-10-18T13:00:00+00:00",
+   "image": "img/ne-po-muzhski-semak-o-konflikte-soboleva-i-sidibe-posle-volevoy-pobedy.jpg",
+   "thumb": "img/ne-po-muzhski-semak-o-konflikte-soboleva-i-sidibe-posle-volevoy-pobedy_s.jpg"
   },
   {
    "id": "lokomotiv-i-krasnodar-zavershili-match-11-go-tura-rpl-vnichyu-3-3",
@@ -38,13 +29,31 @@
    "thumb": "img/lokomotiv-i-krasnodar-zavershili-match-11-go-tura-rpl-vnichyu-3-3-v2_s.jpg"
   },
   {
-   "id": "ak-bars-neftehimik-i-avangard-oderzhali-pobedy-v-matchah-khl",
-   "title": "«Ак Барс» прервал серию поражений в Шанхае, «Нефтехимик» и «Авангард» тоже победили в КХЛ",
-   "lead": "Казанский «Ак Барс» в овертайме обыграл «Шанхайские Драконы» и прервал серию из четырёх поражений, а «Нефтехимик» и «Авангард» тоже одержали победы в матчах регулярного чемпионата КХЛ.",
+   "id": "u-nas-ne-balet-u-nas-muzhskaya-igra-kvartalnov-o-pobede-lokomotiva-v",
+   "title": "«У нас не балет, у нас мужская игра»: Квартальнов — о победе «Локомотива» в Сочи, Елесин провёл 500-й матч",
+   "lead": "«Локомотив» обыграл «Сочи» в гостях со счётом 6:3, хотя по ходу встречи вёл с перевесом в четыре шайбы. Капитан ярославцев Александр Елесин провёл 500-й матч за клуб и забросил шайбу из своей зоны.",
    "category": "Хоккей",
-   "published": "2026-10-16T15:52:00+00:00",
-   "image": "img/ak-bars-neftehimik-i-avangard-oderzhali-pobedy-v-matchah-khl-v2.jpg",
-   "thumb": "img/ak-bars-neftehimik-i-avangard-oderzhali-pobedy-v-matchah-khl-v2_s.jpg"
+   "published": "2026-10-17T16:25:00+00:00",
+   "image": "img/u-nas-ne-balet-u-nas-muzhskaya-igra-kvartalnov-o-pobede-lokomotiva-v.jpg",
+   "thumb": "img/u-nas-ne-balet-u-nas-muzhskaya-igra-kvartalnov-o-pobede-lokomotiva-v_s.jpg"
+  },
+  {
+   "id": "larionov-mozhet-pokinut-ska-sredi-kandidatov-roman-rotenberg-i-benua",
+   "title": "Ларионов может покинуть СКА: среди кандидатов — Роман Ротенберг и Бенуа Гру",
+   "lead": "В СКА в ближайшее время может смениться главный тренер, сообщают СМИ. Возможными преемниками Игоря Ларионова называют Романа Ротенберга и Бенуа Гру, а ветераны хоккея разошлись во мнениях о будущем специалиста.",
+   "category": "Хоккей",
+   "published": "2026-10-16T11:48:00+00:00",
+   "image": "img/larionov-mozhet-pokinut-ska-sredi-kandidatov-roman-rotenberg-i-benua.jpg",
+   "thumb": "img/larionov-mozhet-pokinut-ska-sredi-kandidatov-roman-rotenberg-i-benua_s.jpg"
+  },
+  {
+   "id": "spartak-otygralsya-i-obygral-rodinu-v-kubke-rossii-daku-oformil-dubl",
+   "title": "«Спартак» отыгрался и обыграл «Родину» в Кубке России, Даку оформил дубль",
+   "lead": "«Спартак» в гостях победил «Родину» со счётом 4:2 в матче четвёртого тура группового этапа Пути РПЛ Кубка России, уступая по ходу встречи. Дубль оформил нападающий Мирлинд Даку.",
+   "category": "Футбол",
+   "published": "2026-10-15T19:50:00+00:00",
+   "image": "img/spartak-otygralsya-i-obygral-rodinu-v-kubke-rossii-daku-oformil-dubl.jpg",
+   "thumb": "img/spartak-otygralsya-i-obygral-rodinu-v-kubke-rossii-daku-oformil-dubl_s.jpg"
   },
   {
    "id": "yuventus-i-milan-oderzhali-pobedy-v-2-m-ture-ligi-evropy",
@@ -54,15 +63,6 @@
    "published": "2026-10-15T18:40:30+00:00",
    "image": "img/yuventus-i-milan-oderzhali-pobedy-v-2-m-ture-ligi-evropy-v2.jpg",
    "thumb": "img/yuventus-i-milan-oderzhali-pobedy-v-2-m-ture-ligi-evropy-v2_s.jpg"
-  },
-  {
-   "id": "orenburg-oderzhal-krupnuyu-pobedu-nad-rubinom-v-kubke-rossii",
-   "title": "«Оренбург» разгромил «Рубин» в Казани — 4:1 в Кубке России",
-   "lead": "«Оренбург» на выезде обыграл «Рубин» со счётом 4:1 в матче четвёртого тура группового этапа Пути РПЛ Кубка России.",
-   "category": "Футбол",
-   "published": "2026-10-15T17:25:00+00:00",
-   "image": "img/orenburg-oderzhal-krupnuyu-pobedu-nad-rubinom-v-kubke-rossii-v2.jpg",
-   "thumb": "img/orenburg-oderzhal-krupnuyu-pobedu-nad-rubinom-v-kubke-rossii-v2_s.jpg"
   },
   {
    "id": "real-pobedil-romu-v-gostyah-otygravshis-s-1-3-v-lige-chempionov",
@@ -101,13 +101,13 @@
    "thumb": "img/anton-miranchuk-mozhet-vernutsya-v-lokomotiv-v2_s.jpg"
   },
   {
-   "id": "minskoe-dinamo-obygralo-shanhayskih-drakonov-v-matche-khl",
-   "title": "Дубль Липского принёс минскому «Динамо» победу над «Шанхайскими Драконами»",
-   "lead": "Минское «Динамо» обыграло китайский клуб «Шанхайские Драконы» со счётом 3:2 в выездном матче регулярного чемпионата КХЛ.",
+   "id": "ovechkin-zabrosil-pervuyu-shaybu-v-sezone-i-pobil-rekord-grettski",
+   "title": "Овечкин забросил первую шайбу в сезоне и побил рекорд Гретцки",
+   "lead": "41-летний капитан «Вашингтон Кэпиталз» Александр Овечкин забросил первую шайбу в новом сезоне НХЛ в матче с «Сиэтл Кракен» и побил рекорд Уэйна Гретцки по голам в октябре.",
    "category": "Хоккей",
-   "published": "2026-10-12T13:53:00+00:00",
-   "image": "img/minskoe-dinamo-obygralo-shanhayskih-drakonov-v-matche-khl-v2.jpg",
-   "thumb": "img/minskoe-dinamo-obygralo-shanhayskih-drakonov-v-matche-khl-v2_s.jpg"
+   "published": "2026-10-12T03:00:38+00:00",
+   "image": "img/ovechkin-zabrosil-pervuyu-shaybu-v-sezone-i-pobil-rekord-grettski.jpg",
+   "thumb": "img/ovechkin-zabrosil-pervuyu-shaybu-v-sezone-i-pobil-rekord-grettski_s.jpg"
   },
   {
    "id": "dinamo-moskva-vyigralo-kubok-legend-po-voleybolu-2026-goda",
@@ -119,13 +119,13 @@
    "thumb": "img/dinamo-moskva-vyigralo-kubok-legend-po-voleybolu-2026-goda-v2_s.jpg"
   },
   {
-   "id": "manchester-siti-vyigral-u-liverpulya-so-schetom-3-0-v-shestom-ture-apl",
-   "title": "«Манчестер Сити» разгромил «Ливерпуль» на «Энфилде» и одержал шестую победу подряд",
-   "lead": "«Манчестер Сити» на выезде обыграл «Ливерпуль» со счётом 3:0 в матче шестого тура английской Премьер-лиги.",
+   "id": "dinamo-obygralo-rubin-i-vpervye-za-874-dnya-vozglavilo-rpl-samoshnikov",
+   "title": "«Динамо» обыграло «Рубин» и впервые за 874 дня возглавило РПЛ. Самошников: «Беру ответственность на себя»",
+   "lead": "Московское «Динамо» победило «Рубин» в Казани со счётом 1:0 в матче 10-го тура РПЛ, одержало седьмую победу подряд во всех турнирах и впервые за 874 дня поднялось на первое место в таблице.",
    "category": "Футбол",
-   "published": "2026-10-11T18:11:00+00:00",
-   "image": "img/manchester-siti-vyigral-u-liverpulya-so-schetom-3-0-v-shestom-ture-apl-v2.jpg",
-   "thumb": "img/manchester-siti-vyigral-u-liverpulya-so-schetom-3-0-v-shestom-ture-apl-v2_s.jpg"
+   "published": "2026-10-11T18:27:00+00:00",
+   "image": "img/dinamo-obygralo-rubin-i-vpervye-za-874-dnya-vozglavilo-rpl-samoshnikov.jpg",
+   "thumb": "img/dinamo-obygralo-rubin-i-vpervye-za-874-dnya-vozglavilo-rpl-samoshnikov_s.jpg"
   },
   {
    "id": "rossiyskie-yuniory-vyshli-v-final-gran-pri-isu-vo-vseh-distsiplinah",
@@ -146,13 +146,22 @@
    "thumb": "img/pszh-vyigral-u-le-mana-golovin-sdelal-golevuyu-peredachu-za-monako-v-v2_s.jpg"
   },
   {
-   "id": "tsska-oderzhal-desyatuyu-pobedu-podryad-obygrav-moskovskoe-dinamo",
-   "title": "ЦСКА обыграл московское «Динамо» 5:2 и одержал десятую победу подряд в КХЛ",
-   "lead": "В московском дерби регулярного чемпионата КХЛ ЦСКА выиграл у «Динамо» со счётом 5:2 и довёл победную серию до десяти матчей.",
+   "id": "dva-assista-kucherova-prinesli-tampe-tretyu-pobedu-podryad-rossiyanin",
+   "title": "Два ассиста Кучерова принесли «Тампе» третью победу подряд, россиянин поднялся на 57-е место в истории НХЛ",
+   "lead": "Никита Кучеров отдал две голевые передачи в матче с «Миннесотой Уайлд» (3:2), обошёл Люка Робитайла по ассистам и вошёл в топ-50 НХЛ по матчам с двумя и более очками. А перед стартом сезона его назвали третьим в рейтинге 100 лучших хоккеистов лиги.",
    "category": "Хоккей",
-   "published": "2026-10-09T18:56:07+00:00",
-   "image": "img/tsska-oderzhal-desyatuyu-pobedu-podryad-obygrav-moskovskoe-dinamo-v2.jpg",
-   "thumb": "img/tsska-oderzhal-desyatuyu-pobedu-podryad-obygrav-moskovskoe-dinamo-v2_s.jpg"
+   "published": "2026-10-09T03:30:00+00:00",
+   "image": "img/dva-assista-kucherova-prinesli-tampe-tretyu-pobedu-podryad-rossiyanin.jpg",
+   "thumb": "img/dva-assista-kucherova-prinesli-tampe-tretyu-pobedu-podryad-rossiyanin_s.jpg"
+  },
+  {
+   "id": "uniks-razgromil-dinamo-vladivostok-117-75-shved-vybyl-na-dva-mesyatsa",
+   "title": "УНИКС разгромил «Динамо-Владивосток» 117:75, Швед выбыл на два месяца с переломом кисти",
+   "lead": "УНИКС крупно обыграл «Динамо-Владивосток» в матче регулярного чемпионата Единой лиги ВТБ, однако казанцам ещё долго придётся обходиться без капитана Алексея Шведа, сломавшего кисть в стартовой игре сезона.",
+   "category": "Баскетбол",
+   "published": "2026-09-30T18:01:06+00:00",
+   "image": "img/uniks-razgromil-dinamo-vladivostok-117-75-shved-vybyl-na-dva-mesyatsa.jpg",
+   "thumb": "img/uniks-razgromil-dinamo-vladivostok-117-75-shved-vybyl-na-dva-mesyatsa_s.jpg"
   },
   {
    "id": "sbornaya-rossii-obygrala-iran-so-schetom-2-0-blagodarya-dublyu",
@@ -200,24 +209,6 @@
    "thumb": "img/grigoryan-nazval-oblyakova-luchshim-igrokom-rpl-po-itogam-sentyabrya-v3_s.jpg"
   },
   {
-   "id": "devin-buker-vyrazil-lyubov-k-basketbolu-pered-nachalom-sezona-2026",
-   "title": "Девин Букер перед стартом сезона НБА: люблю эту игру больше, чем когда-либо",
-   "lead": "29-летний защитник «Финикс Санз» Девин Букер поделился настроем перед началом сезона НБА-2026/2027.",
-   "category": "Баскетбол",
-   "published": "2026-09-30T13:30:25+00:00",
-   "image": "img/devin-buker-vyrazil-lyubov-k-basketbolu-pered-nachalom-sezona-2026-v3.jpg",
-   "thumb": "img/devin-buker-vyrazil-lyubov-k-basketbolu-pered-nachalom-sezona-2026-v3_s.jpg"
-  },
-  {
-   "id": "nachalo-sezona-2026-2027-v-muzhskoy-basketbolnoy-superlige",
-   "title": "Мужская баскетбольная Суперлига стартует 1 октября",
-   "lead": "Новый сезон мужской баскетбольной Суперлиги-2026/2027 начнётся 1 октября. Турнир проводит Российская федерация баскетбола.",
-   "category": "Баскетбол",
-   "published": "2026-09-30T13:30:04+00:00",
-   "image": "img/nachalo-sezona-2026-2027-v-muzhskoy-basketbolnoy-superlige-v3.jpg",
-   "thumb": "img/nachalo-sezona-2026-2027-v-muzhskoy-basketbolnoy-superlige-v3_s.jpg"
-  },
-  {
    "id": "reaktsiya-byvshih-sopernikov-na-verdikt-po-delu-manchester-siti",
    "title": "Почеттино и Руни — о вердикте по делу «Манчестер Сити», клуб подал апелляцию",
    "lead": "После решения независимой комиссии АПЛ о нарушениях финансовых правил «Манчестер Сити» высказались бывшие соперники клуба, а сам «Сити» обжаловал вердикт.",
@@ -252,6 +243,15 @@
    "published": "2026-09-30T12:05:00+00:00",
    "image": "img/kandidaty-na-kolder-trofi-na-kogo-obratit-vnimanie-v-novom-sezone-nhl-v3.jpg",
    "thumb": "img/kandidaty-na-kolder-trofi-na-kogo-obratit-vnimanie-v-novom-sezone-nhl-v3_s.jpg"
+  },
+  {
+   "id": "metallurg-vyigral-kubok-imeni-berlina-sofya-frolova-mvp-finala",
+   "title": "«Металлург» выиграл Кубок имени Берлина, Софья Фролова — MVP «Финала четырёх»",
+   "lead": "Женский «Металлург» из Магнитогорска стал победителем V розыгрыша Кубка имени Д. Я. Берлина, обыграв в финале домашнего «Финала четырёх» «Спарту энд К»-2 со счётом 74:59.",
+   "category": "Баскетбол",
+   "published": "2026-09-30T02:45:08+00:00",
+   "image": "img/metallurg-vyigral-kubok-imeni-berlina-sofya-frolova-mvp-finala.jpg",
+   "thumb": "img/metallurg-vyigral-kubok-imeni-berlina-sofya-frolova-mvp-finala_s.jpg"
   }
  ]
 }

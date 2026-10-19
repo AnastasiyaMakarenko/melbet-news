@@ -310,7 +310,9 @@ def article(link):
     h1 = re.search(r"(?is)<h1[^>]*>", page)
     after = page[h1.start():] if h1 else page
     variants.append("\n".join(p for p in paras(after) if len(p) >= 40)[:6000])
-    text = max(variants, key=words) if variants else ""
+    # приоритет: микроразметка статьи → основной блок <article> → абзацы после заголовка
+    # (последний вариант на части сайтов захватывает заголовки чужих материалов, поэтому он — запасной)
+    text = next((v for v in variants if words(v) >= 60), max(variants, key=words) if variants else "")
     text = strip_junk(text)[:8000]
     m = (re.search(r'(?i)property="article:published_time"\s+content="([^"]+)"', raw)
          or re.search(r'(?i)itemprop="datePublished"[^>]*content="([^"]+)"', raw)
