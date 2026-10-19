@@ -283,6 +283,8 @@ IMAGE_RULES = (
     "flares). Show the real sports venue and equipment with a detail that fits the story. AVOID the boring and the "
     "artificial look: no lone ball centred on grass, no symmetrical empty goal shot, no CGI, 3D render, plastic or "
     "over-smooth surfaces, no fake glow. "
+    "NEVER name real stadiums, arenas, cities, clubs, national teams or countries in the description — describe a generic "
+    "modern venue and use only colours (e.g. 'seats in red and white'), so that no real lettering, crests or flags appear. "
     "The venue is EMPTY: no game in progress, empty seats and stands (before or after the match), never describe a packed "
     "or full arena, spectators, fans, teams, players or referees. "
     "STRICTLY no people and no body parts: no faces, hands, silhouettes, crowds or players; no text, letters, numbers, logos or flags; "
