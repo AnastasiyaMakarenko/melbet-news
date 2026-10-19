@@ -1,0 +1,28 @@
+name: style-sample
+
+# Разово: как рерайт перепишет примеры статей (ничего не публикует, ~1 цент)
+on:
+  workflow_dispatch:
+    inputs:
+      samples:
+        description: "JSON: список примеров, каждый — список источников"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python tools/style_sample.py
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TEXT_MODEL: openai/gpt-4.1-mini
+          SAMPLES: ${{ inputs.samples }}
