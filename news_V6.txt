@@ -28,7 +28,7 @@
     #mbn .img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;background:var(--card);border-radius:6px}
 
     /* верхний блок: главная новость + две рядом + колонка «Самое свежее» */
-    #mbn .top-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:32px;padding:24px 0;border-bottom:1px solid var(--line)}
+    #mbn .top-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:36px;padding:24px 0;border-bottom:1px solid var(--line)}
     #mbn .feat{position:relative;display:block;border-radius:8px;overflow:hidden;background:var(--card)}
     #mbn .feat .img{aspect-ratio:16/9;border-radius:0}
     #mbn .feat .cap{position:absolute;left:0;right:0;bottom:0;padding:90px 24px 22px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.65) 35%,rgba(0,0,0,.95))}
@@ -57,7 +57,10 @@
     #mbn .ad-ph::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
     #mbn .ad-size{font-weight:800;font-size:24px;line-height:1;color:var(--accent);letter-spacing:.5px}
     #mbn .ad-note{font-size:11px;line-height:1;color:#b5b5b5;text-transform:uppercase;letter-spacing:1.4px}
-    #mbn .ad-top .ad-size{font-size:20px}
+    #mbn .ad-top{margin:20px 0 4px}
+    #mbn .ad-top .ad-ph.d{max-width:none!important}
+    #mbn .ad-top .ad-size{font-size:30px}
+    #mbn .top-grid .ad{margin:16px 0 4px}
     #mbn .ad .m{display:none}
     @media (max-width:700px){#mbn .ad .d{display:none}#mbn .ad .m{display:flex}#mbn .ad img.m{display:block}}
 
@@ -194,13 +197,14 @@
     var upd = document.getElementById('mbn-upd');
     /* Баннеры: файл banners.json в облаке (рядом с новостями). Менять баннер можно без перезаливки этого файла.
        Места и размеры (картинки лучше делать в 2 раза больше — для чётких экранов):
-         top     — сверху во всю ширину:        970×90  (на телефоне 320×100, ключ img_mobile)
+         top     — сверху во всю ширину ленты:   1200×200 (на телефоне 320×100, ключ img_mobile)
+         side_top — в колонке «Самое свежее», между новостями: 300×250
          side    — колонка справа, едет при прокрутке: 300×600 (на телефоне не показывается)
          feed    — в ленте через каждые 5 новостей: 728×90 (на телефоне 320×100)
          article — под текстом новости:           728×90 (на телефоне 320×100)
        Формат: {"top": {"img": "banners/top.jpg", "img_mobile": "banners/top_m.jpg", "href": "https://…", "alt": "…"}, "side": {…}, …}
        Нет баннера — показывается оформленное пустое место с размером (если CONFIG.showEmptyAds = true, иначе скрыто). */
-    var AD_SIZES = {top: [970, 90], top_m: [320, 100], side: [300, 600], feed: [728, 90], feed_m: [320, 100],
+    var AD_SIZES = {top: [1200, 200], top_m: [320, 100], side_top: [300, 250], side: [300, 600], feed: [728, 90], feed_m: [320, 100],
                     article: [728, 90], article_m: [320, 100]};
     var FEED_AD_EVERY = 5;
     var banners = {}, adPreview = CONFIG.showEmptyAds || /[?&]banners=preview\b/.test(location.search);
@@ -465,11 +469,13 @@
           pair.appendChild(mid(list[2]));
           left.appendChild(pair);
           side.appendChild(el('div', 'side-t', 'Самое свежее'));
-          list.slice(3, 9).forEach(function (n) { side.appendChild(mini(n)); });
+          list.slice(3, 5).forEach(function (n) { side.appendChild(mini(n)); });
+          addAd(side, 'side_top');                 // баннер 300×250 между новостями справа — на первом экране
+          list.slice(5, 7).forEach(function (n) { side.appendChild(mini(n)); });
           grid.appendChild(left);
           grid.appendChild(side);
           view.appendChild(grid);
-          rest = list.slice(9, shown + 9);
+          rest = list.slice(7, shown + 7);
         } else {                                   // мало новостей (например, в разделе) — без верхнего блока
           rest = list.slice(0, shown);
         }
@@ -485,7 +491,7 @@
         cols.appendChild(feed);
         cols.appendChild(rail);
         if (rest.length) view.appendChild(cols);
-        if (list.length > shown + (list.length >= 5 ? 9 : 0)) {
+        if (list.length > shown + (list.length >= 5 ? 7 : 0)) {
           var b = el('button', 'more', 'Показать ещё');
           b.type = 'button';
           b.onclick = function () { shown += PAGE; drawList(cat); };
