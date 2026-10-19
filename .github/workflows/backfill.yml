@@ -25,7 +25,7 @@ jobs:
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TEXT_MODEL: openai/gpt-4.1-mini
-          IMAGE_MODEL: openai/gpt-5-image-mini
+          IMAGE_MODEL: google/gemini-nano-banana-2.1
       - if: inputs.mode == 'run'
         run: |
           git config user.name "news-bot"

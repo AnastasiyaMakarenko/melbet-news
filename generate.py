@@ -53,7 +53,7 @@ CAT_SLUGS = {"Футбол": "football", "Хоккей": "hockey", "Баскет
 CATEGORIES = ["Футбол", "Хоккей", "Баскетбол", "Теннис", "Фигурное катание", "Волейбол", "Биатлон", "Единоборства",
               "Автоспорт", "Киберспорт", "Другое"]
 TEXT_MODEL = os.getenv("TEXT_MODEL", "openai/gpt-4.1-mini")
-IMAGE_MODEL = os.getenv("IMAGE_MODEL", "openai/gpt-5-image-mini")
+IMAGE_MODEL = os.getenv("IMAGE_MODEL", "google/gemini-nano-banana-2.1")
 
 # реклама и не-новости: по словам в заголовке и по разделам в ссылке
 AD_WORDS = re.compile(r"приглаша|получите|призы за|промокод|бонус|фрибет|розыгрыш|реклам|коэффициент|прогноз", re.I)

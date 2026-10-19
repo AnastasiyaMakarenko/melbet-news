@@ -1,5 +1,5 @@
 """Разово: новые картинки для уже опубликованных новостей по новым правилам (живее и разнообразнее, без людей).
-Картинки сохраняются под НОВЫМИ именами (<id>-v2.jpg) — старые у посетителей закэшированы, перезаписывать их нельзя.
+Картинки сохраняются под НОВЫМИ именами (<id>-v2.jpg, -v3 …) — старые у посетителей закэшированы, перезаписывать их нельзя.
 Заодно убирает из ленты новости без текста."""
 import json, pathlib, sys
 sys.path.insert(0, ".")
@@ -17,7 +17,9 @@ for item in index["items"]:
         empty.append(item["id"]); print("без текста, убираю из ленты:", item["title"]); continue
     prompt = g.ask_json("Ты фоторедактор спортивного сайта. Верни JSON {\"image_prompt\": \"...\"}: image_prompt — " + g.IMAGE_RULES,
                         {"title": art["title"], "lead": art["lead"], "category": art["category"]})["image_prompt"]
-    nid = f"{item['id']}-v2"
+    # новое имя файла: <id>-vN (старые картинки закэшированы у посетителей навсегда — перезаписывать нельзя)
+    m = g.re.search(r"-v(\d+)\.jpg$", item.get("image") or "")
+    nid = f"{item['id']}-v{int(m.group(1)) + 1 if m else 2}"
     try:
         big, small = g.make_image(prompt, nid)
     except Exception as err:
