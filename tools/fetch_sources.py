@@ -47,7 +47,7 @@ for nid, groups in keys.items():
         if all(any(v in link for v in grp) for grp in groups) and c["link"] not in [h["link"] for h in hits]:
             hits.append(c)
     got = []
-    for c in hits[:4]:
+    for c in hits[:8]:
         text, _ = g.article(c["link"])
         if g.words(text) >= 40:
             got.append({"source": c["source"], "link": c["link"], "title": c["title"], "text": text})
