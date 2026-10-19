@@ -8,6 +8,19 @@ sys.path.insert(0, ".")
 import generate as g
 from backfill import from_sitemap
 
+# режим 2: прямые ссылки {ключ: [url, ...]} — скачать именно их
+if os.environ.get("LINKS"):
+    out = {}
+    for key, urls in json.loads(os.environ["LINKS"]).items():
+        got = []
+        for u in urls:
+            text, ts = g.article(u)
+            got.append({"link": u, "text": text, "ts": ts})
+            print(f"{key}: {g.words(text)} слов | {u.rsplit('/', 1)[-1][:70]}")
+        out[key] = got
+    g.pathlib.Path("sources_dump.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), "utf-8")
+    sys.exit(0)
+
 keys = json.loads(os.environ["KEYS"])
 index = {i["id"]: i for i in json.loads(g.INDEX.read_text("utf-8"))["items"]}
 

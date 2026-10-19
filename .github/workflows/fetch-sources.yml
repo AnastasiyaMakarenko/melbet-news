@@ -7,7 +7,10 @@ on:
     inputs:
       keys:
         description: "JSON: {id новости: [[ключевые слова], ...]}"
-        required: true
+        default: "{}"
+      links:
+        description: "JSON: {ключ: [url, ...]} — скачать именно эти страницы"
+        default: ""
 
 permissions:
   contents: read
@@ -27,6 +30,7 @@ jobs:
           PYTHONPATH: tools
           OPENROUTER_API_KEY: not-used
           KEYS: ${{ inputs.keys }}
+          LINKS: ${{ inputs.links }}
       - uses: actions/upload-artifact@v4
         with:
           name: sources
