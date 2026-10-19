@@ -256,18 +256,35 @@ def edit(cands, published_titles):
 
 # ---------- 3–5. текст: источники -> рерайт -> фактчек ----------
 
+def words(t):
+    return len(t.split())
+
+
 def article(link):
-    """Текст статьи и время публикации со страницы источника."""
+    """Текст статьи и время публикации со страницы источника.
+    Пробуем по очереди и берём самый полный вариант: articleBody из микроразметки страницы, абзацы основного блока
+    <article>, абзацы после заголовка h1. (Раньше брался только блок <article>, и на части сайтов текст терялся.)"""
     try:
         raw = get(link)
     except Exception as err:
         print("  не удалось скачать статью:", link, err)
         return "", None
+    variants = []
+    for body in re.findall(r'"articleBody"\s*:\s*"((?:[^"\\]|\\.)*)"', raw):
+        try:
+            variants.append(clean(json.loads('"' + body + '"')))
+        except Exception:
+            pass
     page = re.sub(r"(?is)<(script|style|noscript)[^>]*>.*?</\1>", " ", raw)
+    paras = lambda html_part: [clean(p) for p in re.findall(r"(?is)<p[^>]*>(.*?)</p>", html_part)]
     blocks = re.findall(r"(?is)<article[^>]*>(.*?)</article>", page)
-    scope = max(blocks, key=len) if blocks and len(max(blocks, key=len)) > 1500 else page
-    paras = [clean(p) for p in re.findall(r"(?is)<p[^>]*>(.*?)</p>", scope)]
-    text = "\n".join(p for p in paras if len(p) >= 60)[:5000]
+    if blocks:
+        variants.append("\n".join(p for p in paras(max(blocks, key=len)) if len(p) >= 40))
+    h1 = re.search(r"(?is)<h1[^>]*>", page)
+    after = page[h1.start():] if h1 else page
+    variants.append("\n".join(p for p in paras(after) if len(p) >= 40)[:6000])
+    text = max(variants, key=words) if variants else ""
+    text = text[:8000]
     m = (re.search(r'(?i)property="article:published_time"\s+content="([^"]+)"', raw)
          or re.search(r'(?i)itemprop="datePublished"[^>]*content="([^"]+)"', raw)
          or re.search(r'"datePublished"\s*:\s*"([^"]+)"', raw))
