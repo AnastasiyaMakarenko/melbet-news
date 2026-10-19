@@ -276,18 +276,42 @@ def article(link):
 
 # правила для картинок: живые, разные, по сути конкретной новости — но без людей (требование проекта)
 IMAGE_RULES = (
-    "describe ONE realistic scene that looks like a real editorial news photo for THIS story (shot on a professional camera, "
-    "natural colours, believable light, no artistic or fantasy effects). Show the real setting and equipment of this sport "
-    "with a detail that fits the story, for example: match result — the ball in the goal net at a floodlit stadium; transfer "
-    "or contract — a pen and documents on a desk in a club office with the training pitch visible through the window; "
-    "coach news — a tactics board and whistle on the bench at the edge of the pitch; injury — a medical bag and stretcher at "
-    "the touchline; trophy or title — the trophy on a podium in an arena; hockey — puck and stick on the ice at the boards; "
-    "tennis — balls and racket on the court by the net; basketball — a ball on the parquet under the hoop; volleyball — "
-    "a ball at the net in a sports hall; national team — kits hanging in a locker room. Use medium or wide shots more often "
-    "than extreme close-ups; vary angle, time of day and weather so images differ, keep it universal and calm, not staged. "
+    "describe ONE bright, vivid scene that looks like a real photo by a professional sports photojournalist for THIS story "
+    "(full-frame camera, 24-35mm or 85mm lens, real light, slight natural imperfections and film grain). Colours rich and "
+    "saturated, strong dramatic light: floodlights at night, golden hour sun, blue hour sky, coloured stadium seats, "
+    "team colours of the clubs in the story (on seats, scarves on railings, kits hanging, nets, goal frames, smoke from "
+    "flares). Show the real sports venue and equipment with a detail that fits the story. AVOID the boring and the "
+    "artificial look: no lone ball centred on grass, no symmetrical empty goal shot, no CGI, 3D render, plastic or "
+    "over-smooth surfaces, no fake glow. "
     "STRICTLY no people and no body parts: no faces, hands, silhouettes, crowds or players; no text, letters, numbers, logos or flags; "
     "no advertising boards, betting slips, odds screens, casino chips, cards or anything related to gambling."
 )
+
+# набор сюжетов: каждой новости достаётся свой (по её адресу) — чтобы картинки не повторяли одно и то же
+SCENES = [
+    "aerial drone shot of the whole stadium at night with floodlights on and the city lights around",
+    "wide shot from the top row of the stands at golden hour, long shadows across the pitch or ice",
+    "the players' tunnel leading out to a brightly lit arena, view from inside the tunnel",
+    "the substitutes' bench and dugout with team jackets and water bottles, the arena behind",
+    "the dressing room with kits in team colours hanging in a row, boots below, warm light",
+    "rain-soaked pitch under floodlights, puddles reflecting the lights, drops in the air",
+    "light snow falling over the stadium at night, lit by floodlights",
+    "coloured smoke from flares drifting over empty stands in team colours",
+    "fireworks and confetti over the arena after a match",
+    "low angle from ground level at the corner flag or the goal line, stadium towering above",
+    "the trophy or medals on a pedestal in a dark arena under a spotlight",
+    "the stadium exterior at blue hour with the facade lit in team colours",
+    "close view of the goal net bulging with the ball inside, stadium lights bokeh behind",
+    "the scoreboard and video screens glowing over an empty arena (screens without any text)",
+    "the ice rink from above with the fresh ice shining, the boards and nets in team colours",
+    "the court or hall from the top tier with dramatic spotlights cutting through haze",
+    "training ground in the morning: cones, mannequins, balls in a net bag, mist over the grass",
+    "press conference room with microphones on the table and a backdrop in team colours (no text)",
+]
+
+
+def scene_for(nid):
+    return SCENES[int(hashlib.md5(nid.encode()).hexdigest(), 16) % len(SCENES)]
 
 # ЮРИДИЧЕСКОЕ ТРЕБОВАНИЕ (юротдел Мелбет, 19.10.2026): новости о спорте, в т.ч. российские и о российских спортсменах,
 # можно — но БЕЗ любых упоминаний ставок и всего, что связано с букмекерами: акции, фрибеты, бонусы, коэффициенты,
@@ -403,6 +427,7 @@ def save_images(img, nid):
 
 
 def make_image(prompt, nid):
+    prompt = prompt + " Scene idea for variety (adapt it to the story and this sport): " + scene_for(nid) + "."
     last = None
     for attempt in range(3):                              # модель иногда отвечает без картинки — пробуем ещё
         try:
@@ -410,7 +435,7 @@ def make_image(prompt, nid):
                 "model": IMAGE_MODEL,
                 "modalities": ["image", "text"],
                 "messages": [{"role": "user", "content":
-                    "Generate a landscape 3:2 photorealistic editorial sports news photo, natural and realistic, high detail. " + prompt +
+                    "Generate a landscape 3:2 photo: bright, vivid, real sports photojournalism, not CGI. " + prompt +
                     " Absolutely no people or body parts, no faces, hands, silhouettes or crowds, no text, numbers or logos."}],
             })
             url = msg["images"][0]["image_url"]["url"]  # data:image/png;base64,....
