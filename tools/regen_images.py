@@ -10,7 +10,10 @@ index = json.loads((d / "news.json").read_text("utf-8"))
 archive = json.loads((d / "archive.json").read_text("utf-8"))
 
 empty = []
+ONLY = [x for x in g.os.getenv("ONLY_IDS", "").split(",") if x]   # перегенерировать только эти новости
 for item in index["items"]:
+    if ONLY and item["id"] not in ONLY:
+        continue
     art_path = d / "a" / f"{item['id']}.json"
     art = json.loads(art_path.read_text("utf-8"))
     if len(art.get("body") or []) < 2:

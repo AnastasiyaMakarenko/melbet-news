@@ -1,7 +1,12 @@
 name: regen-images
 
 # Разово: перегенерировать картинки у уже опубликованных новостей (тратит OpenRouter: ~2 цента за картинку)
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      only_ids:
+        description: "адреса новостей через запятую (пусто — все)"
+        default: ""
 
 permissions:
   contents: write
@@ -21,6 +26,7 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TEXT_MODEL: openai/gpt-4.1-mini
           IMAGE_MODEL: google/gemini-nano-banana-2.1
+          ONLY_IDS: ${{ inputs.only_ids }}
       - run: |
           git config user.name "news-bot"
           git config user.email "news-bot@users.noreply.github.com"

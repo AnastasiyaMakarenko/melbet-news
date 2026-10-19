@@ -286,7 +286,8 @@ IMAGE_RULES = (
     "The venue is EMPTY: no game in progress, empty seats and stands (before or after the match), never describe a packed "
     "or full arena, spectators, fans, teams, players or referees. "
     "STRICTLY no people and no body parts: no faces, hands, silhouettes, crowds or players; no text, letters, numbers, logos or flags; "
-    "no advertising boards, betting slips, odds screens, casino chips, cards or anything related to gambling."
+    "no advertising boards, betting slips, odds screens, casino chips, cards or anything related to gambling; "
+    "no club crests, emblems, stars or mascots on seats, scarves or flags; no captain armbands; no staff or stewards even far away."
 )
 
 # набор сюжетов: каждой новости достаётся свой (по её адресу) — чтобы картинки не повторяли одно и то же
