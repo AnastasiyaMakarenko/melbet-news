@@ -259,7 +259,7 @@ def edit(cands, published_titles):
 # ---------- 3–5. текст: источники -> рерайт -> фактчек ----------
 
 # всё после этих слов на страницах источников — ссылки на другие материалы, подвал сайта
-TAIL_MARKERS = ["Реклама 18+", "Читать также", "Всё о спорте авторитетно", "Матч дня", "Самое читаемое", "Подписывайтесь"]
+TAIL_MARKERS = ["Читать также", "Всё о спорте авторитетно", "Матч дня", "Самое читаемое", "Подписывайтесь"]
 AD_SENTENCE = re.compile(r"фрибет|бонус|промокод|реклама|скачать приложение", re.I)
 # рекламный призыв, вставленный посреди текста: «Перейти в … и получить фрибеты —»
 AD_INLINE = re.compile(r"(?i)перейти в [^—.!?]{0,60}(?:—|\.)\s*")
@@ -301,9 +301,12 @@ def article(link):
             pass
     page = re.sub(r"(?is)<(script|style|noscript)[^>]*>.*?</\1>", " ", raw)
     paras = lambda html_part: [clean(p) for p in re.findall(r"(?is)<p[^>]*>(.*?)</p>", html_part)]
-    blocks = re.findall(r"(?is)<article[^>]*>(.*?)</article>", page)
-    if blocks:
-        variants.append("\n".join(p for p in paras(max(blocks, key=len)) if len(p) >= 40))
+    # блоки <article>: абзацы могут быть и <p>, и <div> (так у «Советского спорта», где текст лежит в скрытом блоке)
+    for block in re.findall(r"(?is)<article[^>]*>(.*?)</article>", raw):
+        block = re.sub(r"(?is)<(script|style|noscript|svg)[^>]*>.*?</\1>", " ", block)
+        block = re.sub(r"(?is)</(p|div|li|h[1-6])>|<br\s*/?>", "\n", block)
+        lines = [clean(x) for x in block.split("\n")]
+        variants.append("\n".join(x for x in lines if len(x) >= 40 and not AD_SENTENCE.search(x)))
     h1 = re.search(r"(?is)<h1[^>]*>", page)
     after = page[h1.start():] if h1 else page
     variants.append("\n".join(p for p in paras(after) if len(p) >= 40)[:6000])
