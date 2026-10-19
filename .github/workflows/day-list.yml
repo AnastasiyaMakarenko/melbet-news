@@ -1,0 +1,23 @@
+name: day-list
+# БЕСПЛАТНО: список заметок архива за нужные дни (нейронка не используется)
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'JSON: [["2026-10-17", "hockey"], ...]'
+        required: true
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt && python tools/day_list.py
+        env:
+          PYTHONPATH: tools
+          OPENROUTER_API_KEY: not-used
+          DAYS: ${{ inputs.days }}
