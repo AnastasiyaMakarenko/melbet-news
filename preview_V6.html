@@ -365,7 +365,6 @@
       var ok = b && b.img && (!b.href || /^(https?:)?\/\//.test(b.href) || b.href.charAt(0) === '/');
       if (!ok && !adPreview) return null;
       var box = el('div', 'ad ad-' + slot);
-      box.appendChild(el('div', 'ad-lbl', 'Реклама'));   // пометка рекламы обязательна
       function pic(src, size, cls) {
         if (!ok) {
           var ph = el('div', 'ad-ph ' + cls);
