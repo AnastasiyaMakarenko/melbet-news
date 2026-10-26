@@ -1,23 +1,23 @@
 {
   "top": {
-    "img": "banners/top.jpg",
-    "img_mobile": "banners/wide_m.jpg",
+    "img": "banners/top-v2.jpg",
+    "img_mobile": "banners/wide_m-v2.jpg",
     "alt": "Мелбет",
     "href": "https://melbet.ru/ru/promotions/5/popup/promotions/14"
   },
   "side": {
-    "img": "banners/side_top.jpg",
+    "img": "banners/side_top-v2.jpg",
     "alt": "Мелбет",
     "href": "https://melbet.ru/ru/promotions/5/popup/promotions/14"
   },
   "rail": {
-    "img": "banners/side.jpg",
+    "img": "banners/side-v2.jpg",
     "alt": "Мелбет",
     "href": "https://melbet.ru/ru/promotions/5/popup/promotions/14"
   },
   "wide": {
-    "img": "banners/wide.jpg",
-    "img_mobile": "banners/wide_m.jpg",
+    "img": "banners/wide-v2.jpg",
+    "img_mobile": "banners/wide_m-v2.jpg",
     "alt": "Мелбет",
     "href": "https://melbet.ru/ru/promotions/5/popup/promotions/14"
   }
