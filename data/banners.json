@@ -1,0 +1,6 @@
+{
+  "top":  {"img": "banners/top.jpg",      "img_mobile": "banners/wide_m.jpg", "alt": "Мелбет"},
+  "side": {"img": "banners/side_top.jpg", "alt": "Мелбет"},
+  "rail": {"img": "banners/side.jpg",     "alt": "Мелбет"},
+  "wide": {"img": "banners/wide.jpg",     "img_mobile": "banners/wide_m.jpg", "alt": "Мелбет"}
+}

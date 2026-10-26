@@ -200,13 +200,13 @@
     /* Баннеры: файл banners.json в облаке (рядом с новостями). Менять баннер можно без перезаливки этого файла.
        Места и размеры (картинки лучше делать в 2 раза больше — для чётких экранов):
          top     — сверху во всю ширину ленты:   1200×200 (на телефоне 320×100, ключ img_mobile)
-         side_top — в колонке «Самое свежее», между новостями: 300×250
-         side    — колонка справа, едет при прокрутке: 300×600 (на телефоне не показывается)
+         side    — в колонке «Самое свежее», между новостями: 300×250
+         rail    — колонка справа, едет при прокрутке: 300×600 (на телефоне не показывается)
          feed    — в ленте через каждые 5 новостей: 728×90 (на телефоне 320×100)
          article — под текстом новости:           728×90 (на телефоне 320×100)
        Формат: {"top": {"img": "banners/top.jpg", "img_mobile": "banners/top_m.jpg", "href": "https://…", "alt": "…"}, "side": {…}, …}
        Нет баннера — показывается оформленное пустое место с размером (если CONFIG.showEmptyAds = true, иначе скрыто). */
-    var AD_SIZES = {top: [1200, 200], top_m: [320, 100], side_top: [300, 250], side: [300, 600], feed: [728, 90], feed_m: [320, 100],
+    var AD_SIZES = {top: [1200, 200], top_m: [320, 100], side: [300, 250], rail: [300, 600], feed: [728, 90], feed_m: [320, 100],
                     article: [728, 90], article_m: [320, 100]};
     var FEED_AD_EVERY = 5;
     var banners = {}, adPreview = CONFIG.showEmptyAds || /[?&]banners=preview\b/.test(location.search);
@@ -472,7 +472,7 @@
           left.appendChild(pair);
           side.appendChild(el('div', 'side-t', 'Самое свежее'));
           list.slice(3, 5).forEach(function (n) { side.appendChild(mini(n)); });
-          addAd(side, 'side_top');                 // баннер 300×250 между новостями справа — на первом экране
+          addAd(side, 'side');                 // баннер 300×250 между новостями справа — на первом экране
           list.slice(5, 7).forEach(function (n) { side.appendChild(mini(n)); });
           grid.appendChild(left);
           grid.appendChild(side);
@@ -488,7 +488,7 @@
           feed.appendChild(card(n, list.length < 5 && i === 0));
           if ((i + 1) % FEED_AD_EVERY === 0 && i + 1 < rest.length) addAd(feed, 'feed');
         });
-        addAd(rail, 'side');
+        addAd(rail, 'rail');
         rail.style.top = (fixedTop() + 16) + 'px';   // не заезжать под закреплённую шапку сайта
         cols.appendChild(feed);
         cols.appendChild(rail);
@@ -545,7 +545,7 @@
       box.appendChild(note);
       var wrap = el('div', 'art-cols'), rail = el('aside', 'rail');   // текст новости + реклама справа
       wrap.appendChild(box);
-      addAd(rail, 'side');
+      addAd(rail, 'rail');
       rail.style.top = (fixedTop() + 16) + 'px';
       wrap.appendChild(rail);
       view.appendChild(wrap);
