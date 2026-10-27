@@ -20,5 +20,10 @@
     "img_mobile": "banners/wide_m-v2.jpg",
     "alt": "Мелбет",
     "href": "https://melbet.ru/ru/promotions/5/popup/promotions/14"
+  },
+  "side_top": {
+    "img": "banners/side_top-v2.jpg",
+    "alt": "Мелбет",
+    "href": "https://melbet.ru/ru/promotions/5/popup/promotions/14"
   }
 }

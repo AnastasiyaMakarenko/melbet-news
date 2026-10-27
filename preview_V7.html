@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Превью</title><style>body{margin:0;background:#000}</style></head><body>
+<div id="mbn">
+  <style>
+    #mbn{--bg:#000;--fg:#fff;--muted:#a8a8a8;--line:#262626;--card:#111;--accent:#ffc107;
+      background:var(--bg);color:var(--fg);min-height:100vh;padding:0 16px 64px;box-sizing:border-box;
+      font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;text-align:left;line-height:1.4}
+    #mbn *{box-sizing:border-box}
+    #mbn a{color:inherit;text-decoration:none}
+    #mbn h1,#mbn h2,#mbn h3,#mbn p,#mbn ul,#mbn li,#mbn figure{margin:0;padding:0;color:var(--fg);font-family:inherit}
+    #mbn .w{max-width:1100px;margin:0 auto}
+    /* защита от общих стилей сайта для header/nav/main/aside/article */
+    #mbn header,#mbn nav,#mbn main,#mbn aside,#mbn article,#mbn figure{position:static;inset:auto;float:none;width:auto;height:auto;min-height:0;max-height:none;background:none;box-shadow:none;transform:none;z-index:auto;display:block}
+
+    /* шапка и разделы */
+    #mbn .top{border-bottom:1px solid var(--line);padding:24px 0 0}
+    #mbn .logo{display:block;font-size:30px;line-height:1.2;font-weight:800;letter-spacing:-.5px}
+    #mbn .logo span{color:var(--accent)}
+    #mbn .nav{display:flex;gap:4px;overflow-x:auto;margin-top:16px;list-style:none;scrollbar-width:none}
+    #mbn .nav::-webkit-scrollbar{display:none}
+    #mbn .nav li{flex:none}
+    #mbn .nav a{display:block;padding:10px 12px;font-size:15px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent}
+    #mbn .nav a:hover{color:var(--fg)}
+    #mbn .nav a.on{color:var(--fg);border-color:var(--accent)}
+    #mbn .h1c{font-size:26px;line-height:1.2;font-weight:800;margin-top:24px}
+
+    /* подписи: раздел · время */
+    #mbn .meta{font-size:13px;color:var(--muted);margin-bottom:6px}
+    #mbn .cat{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-size:12px}
+    #mbn .img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;background:var(--card);border-radius:6px}
+
+    /* верхний блок: главная новость + две рядом + колонка «Самое свежее» */
+    #mbn .top-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:36px;padding:24px 0;border-bottom:1px solid var(--line)}
+    #mbn .feat{position:relative;display:block;border-radius:8px;overflow:hidden;background:var(--card)}
+    #mbn .feat .img{aspect-ratio:16/9;border-radius:0}
+    #mbn .feat .cap{position:absolute;left:0;right:0;bottom:0;padding:90px 24px 22px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.65) 35%,rgba(0,0,0,.95))}
+    #mbn .feat .ttl{font-size:30px;line-height:1.18;font-weight:800}
+    #mbn .feat p{font-size:16px;color:#e6e6e6;line-height:1.5;margin-top:8px}
+    #mbn .feat .meta{color:#d0d0d0}
+    #mbn .pair{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px}
+    #mbn .mid .img{margin-bottom:10px}
+    #mbn .mid .ttl{font-size:18px;line-height:1.3;font-weight:700}
+    #mbn .side-t,#mbn .sec-t{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--fg);padding-bottom:10px;border-bottom:2px solid var(--accent)}
+    #mbn .sec-t{margin-top:32px}
+    #mbn .mini{display:block;padding:13px 0;border-bottom:1px solid var(--line)}
+    #mbn .mini .meta{margin-bottom:4px}
+    #mbn .mini .ttl{font-size:15px;line-height:1.35;font-weight:600}
+    #mbn .feat:hover .ttl,#mbn .mid:hover .ttl,#mbn .mini:hover .ttl{color:var(--accent)}
+
+    /* рекламные места */
+    #mbn .ad{margin:28px auto;text-align:center}
+    #mbn .ad a,#mbn .ad img{display:block;margin:0 auto}
+    #mbn .ad img{max-width:100%;height:auto;border-radius:8px}
+    #mbn .ad-lbl{font-size:10px;line-height:1;letter-spacing:1.4px;text-transform:uppercase;color:#6f6f6f;margin:0 0 7px}
+    #mbn .ad-ph{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+      width:100%;margin:0 auto;border-radius:8px;overflow:hidden;border:1px solid #2b2b2b;
+      background:repeating-linear-gradient(135deg,rgba(255,193,7,.07) 0 14px,rgba(255,193,7,0) 14px 28px),
+                 radial-gradient(120% 140% at 85% 0%,rgba(255,193,7,.12),rgba(255,193,7,0) 55%),linear-gradient(135deg,#1c1c1c,#0d0d0d)}
+    #mbn .ad-ph::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
+    #mbn .ad-size{font-weight:800;font-size:24px;line-height:1;color:var(--accent);letter-spacing:.5px}
+    #mbn .ad-note{font-size:11px;line-height:1;color:#b5b5b5;text-transform:uppercase;letter-spacing:1.4px}
+    #mbn .ad-top{margin:20px 0 4px}
+    #mbn .ad-top .ad-ph.d{max-width:none!important}
+    #mbn .ad-top .ad-size{font-size:30px}
+    #mbn .top-grid .ad{margin:16px 0 4px}
+    #mbn .ad .m{display:none}
+    @media (max-width:700px){#mbn .ad .d{display:none}#mbn .ad .m{display:flex}#mbn .ad img.m{display:block}}
+
+    /* две колонки: лента / новость слева, рекламная колонка справа (баннер едет при прокрутке) */
+    #mbn .cols{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:36px;align-items:start}
+    #mbn .art-cols{display:grid;grid-template-columns:minmax(0,720px) 300px;gap:44px;justify-content:center;align-items:start}
+    #mbn .art-cols .art{max-width:none;margin:0}
+    #mbn .rail{position:sticky;top:16px;padding-top:24px}
+    #mbn .rail .ad{margin:0}
+    #mbn .feed .ad{margin:24px auto 4px}
+    @media (max-width:900px){
+      #mbn .cols,#mbn .art-cols{grid-template-columns:1fr}
+      #mbn .rail{display:none}
+    }
+
+    /* главная новость */
+    #mbn .hero{display:grid;grid-template-columns:3fr 2fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line)}
+    #mbn .hero .ttl{font-size:28px;line-height:1.2;font-weight:800;margin-bottom:10px}
+    #mbn .hero p{font-size:16px;color:#ddd;line-height:1.5}
+    #mbn .hero:hover .ttl,#mbn .row:hover .ttl{color:var(--accent)}
+
+    /* список новостей */
+    #mbn .row{display:grid;grid-template-columns:200px 1fr;gap:20px;padding:20px 0;border-bottom:1px solid var(--line)}
+    #mbn .row .ttl{font-size:19px;line-height:1.3;font-weight:700;margin-bottom:6px}
+    #mbn .row p{font-size:15px;color:#cfcfcf;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    #mbn .more{display:block;width:100%;margin:28px 0 0;padding:14px;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:6px;font-size:15px;font-weight:600;cursor:pointer}
+    #mbn .more:hover{border-color:var(--accent)}
+    #mbn .empty{padding:48px 0;color:var(--muted);text-align:center}
+
+    /* страница новости */
+    #mbn .art{max-width:720px;margin:0 auto;padding:24px 0}
+    #mbn .back{display:inline-block;font-size:15px;color:var(--muted);margin-bottom:20px}
+    #mbn .back:hover{color:var(--fg)}
+    #mbn .art h1{font-size:34px;line-height:1.2;font-weight:800;margin:4px 0 14px}
+    #mbn .art .lead{font-size:19px;line-height:1.5;font-weight:600;margin-bottom:22px}
+    #mbn .art figure{margin-bottom:24px}
+    #mbn .art .body p{font-size:17px;line-height:1.65;margin-bottom:16px;color:#eee}
+    #mbn .also{margin-top:40px;border-top:1px solid var(--line);padding-top:20px}
+    #mbn .also-t{font-size:20px;font-weight:800;margin-bottom:4px}
+
+    #mbn .foot{margin-top:32px;font-size:13px;color:var(--muted)}
+    #mbn .err{color:#ff6b6b}
+
+    @media (max-width:900px){
+      #mbn .top-grid{grid-template-columns:1fr;gap:24px}
+    }
+    @media (max-width:700px){
+      #mbn .feat .ttl{font-size:21px}
+      #mbn .feat .cap{padding:60px 16px 14px}
+      #mbn .feat p{display:none}
+      #mbn .pair{grid-template-columns:1fr 1fr;gap:14px}
+      #mbn .mid .ttl{font-size:15px}
+      #mbn .logo{font-size:24px}
+      #mbn .h1c{font-size:22px}
+      #mbn .hero{grid-template-columns:1fr;gap:14px}
+      #mbn .hero .ttl{font-size:22px}
+      #mbn .row{grid-template-columns:112px 1fr;gap:14px;padding:16px 0}
+      #mbn .row .ttl{font-size:16px;margin:0}
+      #mbn .row p{display:none}
+      #mbn .art h1{font-size:26px}
+      #mbn .art .lead{font-size:17px}
+      #mbn .art .body p{font-size:16px}
+    }
+  </style>
+
+  <div class="w">
+    <header class="top">
+      <div id="mbn-logo"></div>
+      <nav aria-label="Разделы новостей"><ul class="nav" id="mbn-nav"></ul></nav>
+    </header>
+    <div id="mbn-adtop"></div>
+    <main id="mbn-view"><div class="empty">Загружаем новости…</div></main>
+    <div class="foot" id="mbn-upd"></div>
+  </div>
+
+  <script>
+  (function () {
+    /* ================== НАСТРОЙКИ (единственное, что может понадобиться менять) ==================
+       urlMode — как выглядят адреса:
+         'auto'  → если страница открыта по адресу /ru/news… — чистые адреса (ЧПУ):
+                     /ru/news                    — все новости
+                     /ru/news/football           — раздел
+                     /ru/news/sbornaya-rossii-…  — новость
+                   если лендинг пока открыт по старому адресу (например /ru/pages/191/1) — запасной вариант
+                   с ?news=…, чтобы ничего не сломалось, пока платформа не настроена.
+         'path' / 'query' / 'hash' — принудительно один из вариантов.
+       siteOrigin — основной домен. canonical, Open Graph и микроразметка всегда указывают на него,
+         даже если страницу открыли с поддомена (защита от дублей).
+       Адреса в sitemap.xml задаются в generate.py (SITE_*_URL) и должны совпадать с этими. */
+    var CONFIG = {
+      urlMode: 'auto',
+      pathBase: '/ru/news',
+      siteOrigin: 'https://melbet.ru',
+      homeUrl: 'https://melbet.ru/ru',
+      author: 'Редакция Мелбет',
+      siteName: 'Мелбет',
+      showEmptyAds: true   // true — пустые места под баннеры видны всегда (рамка с размером); false — скрыты, пока нет баннера
+    };
+    /* ============================================================================================ */
+
+    // страница открыта по адресу раздела новостей (/ru/news или /ru/news/…)?
+    function onNewsPath() {
+      var p = location.pathname.toLowerCase(), b = CONFIG.pathBase.toLowerCase();
+      return p === b || p.indexOf(b + '/') === 0;
+    }
+
+    // файл открыт с диска (превью), а не с сайта — адреса с ? там не работают, используем #
+    if (!/^https?:$/.test(location.protocol)) CONFIG.urlMode = 'hash';
+    if (CONFIG.urlMode === 'auto') CONFIG.urlMode = onNewsPath() ? 'path' : 'query';
+
+    // откуда берутся новости и картинки (облачное хранилище). При смене домена облака меняется только эта строка
+    var BASE = 'https://pub-98c67cf30bef4735b815a47638c2625d.r2.dev/';
+    // раздел: название в данных, кусок адреса, заголовок h1 страницы раздела
+    var CATS = [
+      ['Футбол', 'football', 'Новости футбола'], ['Хоккей', 'hockey', 'Новости хоккея'],
+      ['Баскетбол', 'basketball', 'Новости баскетбола'], ['Теннис', 'tennis', 'Новости тенниса'],
+      ['Фигурное катание', 'figure-skating', 'Новости фигурного катания'], ['Волейбол', 'volleyball', 'Новости волейбола'],
+      ['Биатлон', 'biathlon', 'Новости биатлона'], ['Единоборства', 'martial-arts', 'Новости единоборств'],
+      ['Автоспорт', 'motorsport', 'Новости автоспорта'], ['Киберспорт', 'esports', 'Новости киберспорта'],
+      ['Другое', 'other', 'Другие новости спорта']
+    ].map(function (c) { return {label: c[0], slug: c[1], h1: c[2]}; });
+    var HOME_TITLE = 'Новости спорта';
+    var HOME_DESC = 'Свежие новости спорта: футбол, хоккей, баскетбол, теннис и другие виды. Результаты матчей, трансферы, заявления игроков и тренеров.';
+    var PAGE = 20;
+
+    // если платформа перерисовала страницу и скрипт запустился второй раз — выключаем прошлый экземпляр
+    if (window.__mbnStop) { try { window.__mbnStop(); } catch (e) {} }
+    window.prerenderReady = false;   // сигнал пререндеру: страница ещё не готова
+
+    var root = document.getElementById('mbn');
+    var logo = document.getElementById('mbn-logo');
+    var nav = document.getElementById('mbn-nav');
+    var view = document.getElementById('mbn-view');
+    var upd = document.getElementById('mbn-upd');
+    /* Баннеры: файл banners.json в облаке (рядом с новостями). Менять баннер можно без перезаливки этого файла.
+       Места и размеры (картинки лучше делать в 2 раза больше — для чётких экранов):
+         top     — сверху во всю ширину ленты:   1200×200 (на телефоне 320×100, ключ img_mobile)
+         side    — в колонке «Самое свежее», между новостями: 300×250
+         rail    — колонка справа, едет при прокрутке: 300×600 (на телефоне не показывается)
+         feed    — в ленте через каждые 5 новостей: 728×90 (на телефоне 320×100)
+         article — под текстом новости:           728×90 (на телефоне 320×100)
+       Формат: {"top": {"img": "banners/top.jpg", "img_mobile": "banners/top_m.jpg", "href": "https://…", "alt": "…"}, "side": {…}, …}
+       Нет баннера — показывается оформленное пустое место с размером (если CONFIG.showEmptyAds = true, иначе скрыто). */
+    var AD_SIZES = {top: [1200, 200], top_m: [320, 100], side: [300, 250], rail: [300, 600], feed: [728, 90], feed_m: [320, 100],
+                    article: [728, 90], article_m: [320, 100]};
+    var FEED_AD_EVERY = 5;
+    var banners = {}, adPreview = CONFIG.showEmptyAds || /[?&]banners=preview\b/.test(location.search);
+
+    var items = [], loaded = false, shown = PAGE, listScroll = 0, lastKey = '', lastHref = null, seq = 0, artCat = null, virtual = null;
+
+    // всё рисуем через textContent — текст новостей не может встроить свой HTML
+    function el(tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text != null) e.textContent = text;
+      return e;
+    }
+
+    /* ---------- адреса ---------- */
+    function findCat(v) {
+      if (!v) return null;
+      for (var i = 0; i < CATS.length; i++) if (CATS[i].slug === v || CATS[i].label === v) return CATS[i];
+      return null;
+    }
+    function urlNews(id) {
+      if (CONFIG.urlMode === 'hash') return '#n/' + id;
+      if (CONFIG.urlMode === 'path') return CONFIG.pathBase + '/' + id;
+      return location.pathname + '?news=' + id;
+    }
+    function urlCat(c) {
+      if (CONFIG.urlMode === 'hash') return c ? '#c/' + c.slug : '#';
+      if (CONFIG.urlMode === 'path') return CONFIG.pathBase + (c ? '/' + c.slug : '');
+      return location.pathname + (c ? '?cat=' + c.slug : '');
+    }
+    // полный адрес для canonical и микроразметки — всегда на основном домене
+    function abs(u) {
+      var origin = /^https?:$/.test(location.protocol) ? CONFIG.siteOrigin : location.origin;
+      try { return new URL(u, origin + location.pathname).href.replace(/#$/, ''); }
+      catch (e) { return u; }
+    }
+    function dec(s) { try { return decodeURIComponent(s); } catch (e) { return s; } }
+
+    // понимаем все виды адресов сразу (и старые ссылки с #), независимо от urlMode
+    function route() {
+      var q = new URLSearchParams(location.search), h = dec((virtual !== null ? virtual : location.hash).slice(1));
+      var news = q.get('news'), cat = q.get('cat');
+      if (CONFIG.urlMode === 'path' && onNewsPath()) {
+        var rest = dec(location.pathname.slice(CONFIG.pathBase.length)).replace(/^\/+|\/+$/g, '');
+        if (rest.indexOf('c/') === 0) cat = rest.slice(2);      // старый вид /c/football
+        else if (findCat(rest)) cat = rest;                      // /ru/news/football — раздел
+        else if (rest) news = rest;                               // /ru/news/<адрес новости>
+      }
+      if (!news && h.indexOf('n/') === 0) news = h.slice(2);
+      if (!news && !cat && h.indexOf('c/') === 0) cat = h.slice(2);
+      if (news) return {page: 'news', id: news};
+      return {page: 'list', cat: findCat(cat)};
+    }
+
+    /* ---------- SEO: title, description, canonical, Open Graph, микроразметка ---------- */
+    var tags = {}, origTitle = null;
+    function tag(key, selector, make, attr, value) {
+      var t = tags[key];
+      if (!t) {
+        var e = document.head.querySelector(selector), created = !e;
+        if (created) { e = make(); document.head.appendChild(e); }
+        t = tags[key] = {el: e, created: created, attr: attr, orig: created ? null : e.getAttribute(attr)};
+      }
+      t.el.setAttribute(attr, value);
+    }
+    function meta(name, value, prop) {
+      var a = prop ? 'property' : 'name';
+      tag(a + ':' + name, 'meta[' + a + '="' + name + '"]', function () {
+        var m = document.createElement('meta'); m.setAttribute(a, name); return m;
+      }, 'content', value);
+    }
+    function dropTag(key) {   // вернуть как было до нас
+      var t = tags[key];
+      if (!t) return;
+      if (t.created) t.el.remove(); else if (t.orig != null) t.el.setAttribute(t.attr, t.orig);
+      delete tags[key];
+    }
+    function dropLd() { var s = document.getElementById('mbn-ld'); if (s) s.remove(); }
+
+    function seo(o) {   // ошибка в SEO-части не должна ломать показ новостей
+      try { seoApply(o); } catch (e) {}
+    }
+    function seoApply(o) {
+      if (origTitle === null) origTitle = document.title;
+      document.title = o.title;
+      meta('description', o.desc);
+      tag('canonical', 'link[rel="canonical"]', function () {
+        var l = document.createElement('link'); l.rel = 'canonical'; return l;
+      }, 'href', o.url);
+      meta('og:title', o.title, true);
+      meta('og:description', o.desc, true);
+      meta('og:url', o.url, true);
+      meta('og:type', o.type, true);
+      meta('og:site_name', CONFIG.siteName, true);
+      if (o.image) meta('og:image', o.image, true); else dropTag('property:og:image');
+      if (o.notFound) { meta('robots', 'noindex'); meta('prerender-status-code', '404'); }
+      else { dropTag('name:robots'); dropTag('name:prerender-status-code'); }
+      dropLd();
+      if (o.ld) {
+        var s = document.createElement('script');
+        s.type = 'application/ld+json'; s.id = 'mbn-ld';
+        s.textContent = JSON.stringify(o.ld).replace(/</g, '\\u003c');
+        document.head.appendChild(s);
+      }
+    }
+    function crumbs(list) {
+      return {'@type': 'BreadcrumbList', itemListElement: list.map(function (c, i) {
+        return {'@type': 'ListItem', position: i + 1, name: c[0], item: c[1]};
+      })};
+    }
+    function ready() { window.prerenderReady = true; }
+
+    /* ---------- кусочки вёрстки ---------- */
+    function when(iso, full) {
+      var d = new Date(iso);
+      var t = d.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+      if (full) return d.toLocaleDateString('ru-RU', {day: 'numeric', month: 'long', year: 'numeric'}) + ', ' + t;
+      var a = new Date(d), b = new Date();
+      a.setHours(0, 0, 0, 0); b.setHours(0, 0, 0, 0);
+      var days = Math.round((b - a) / 864e5);
+      if (days === 0) return 'Сегодня, ' + t;
+      if (days === 1) return 'Вчера, ' + t;
+      return d.toLocaleDateString('ru-RU', {day: 'numeric', month: 'long'}) + ', ' + t;
+    }
+
+    function link(cls, href, text) {   // внутренняя ссылка: настоящий href для поисковиков, переход без перезагрузки
+      var a = el('a', cls, text);
+      a.href = href;
+      a.setAttribute('data-nav', '');
+      return a;
+    }
+
+    function img(src, alt, eager) {
+      var i = el('img', 'img');
+      i.alt = alt || '';
+      i.loading = eager ? 'eager' : 'lazy';
+      i.width = 3; i.height = 2;       // пропорции, чтобы страница не прыгала при загрузке
+      if (src) i.src = BASE + src;
+      return i;
+    }
+
+    function metaLine(n, full) {
+      var m = el('div', 'meta');
+      var c = findCat(n.category);
+      if (full && c) m.appendChild(link('cat', urlCat(c), n.category)); else m.appendChild(el('span', 'cat', n.category));
+      m.appendChild(document.createTextNode(' · '));
+      var t = el('time', null, when(n.published, full));
+      t.setAttribute('datetime', n.published);
+      m.appendChild(t);
+      if (full) m.appendChild(document.createTextNode(' · ' + CONFIG.author));
+      return m;
+    }
+
+    function adBox(slot) {   // рекламное место: баннер из banners.json или оформленное пустое место с размером
+      var b = banners[slot] || ((slot === 'feed' || slot === 'article') ? banners.wide : null);   // wide — старое название
+      var ok = b && b.img && (!b.href || /^(https?:)?\/\//.test(b.href) || b.href.charAt(0) === '/');
+      if (!ok && !adPreview) return null;
+      var box = el('div', 'ad ad-' + slot);
+      function pic(src, size, cls) {
+        if (!ok) {
+          var ph = el('div', 'ad-ph ' + cls);
+          ph.appendChild(el('span', 'ad-size', size[0] + '×' + size[1]));
+          ph.appendChild(el('span', 'ad-note', 'Место для баннера'));
+          ph.style.maxWidth = size[0] + 'px';
+          ph.style.aspectRatio = size[0] + ' / ' + size[1];
+          return ph;
+        }
+        var i = el('img', cls);
+        i.src = /^https?:/.test(src) ? src : BASE + src;
+        i.alt = b.alt || '';
+        i.width = size[0]; i.height = size[1];
+        i.loading = 'lazy';
+        return i;
+      }
+      var holder = box;
+      if (ok && b.href) {
+        holder = el('a');
+        holder.href = b.href;
+        holder.rel = 'sponsored noopener';
+        box.appendChild(holder);
+      }
+      if (AD_SIZES[slot + '_m']) {                       // разные размеры для компьютера и телефона
+        holder.appendChild(pic(ok && b.img, AD_SIZES[slot], 'd'));
+        holder.appendChild(pic(ok && (b.img_mobile || b.img), AD_SIZES[slot + '_m'], 'm'));
+      } else {
+        holder.appendChild(pic(ok && b.img, AD_SIZES[slot], ''));
+      }
+      return box;
+    }
+    function addAd(parent, slot) { var a = adBox(slot); if (a) parent.appendChild(a); }
+
+    function feat(n) {   // главная новость: заголовок поверх картинки
+      var a = link('feat', urlNews(n.id));
+      a.appendChild(img(n.image, n.title, true));
+      var c = el('div', 'cap');
+      c.appendChild(metaLine(n));
+      c.appendChild(el('div', 'ttl', n.title));
+      if (n.lead) c.appendChild(el('p', null, n.lead));
+      a.appendChild(c);
+      return a;
+    }
+    function mid(n) {    // две новости под главной
+      var a = link('mid', urlNews(n.id));
+      a.appendChild(img(n.thumb || n.image, n.title));
+      a.appendChild(metaLine(n));
+      a.appendChild(el('div', 'ttl', n.title));
+      return a;
+    }
+    function mini(n) {   // строка в колонке «Самое свежее»: время и заголовок, без картинки
+      var a = link('mini', urlNews(n.id));
+      a.appendChild(metaLine(n));
+      a.appendChild(el('div', 'ttl', n.title));
+      return a;
+    }
+
+    function card(n, big) {
+      var a = link(big ? 'hero' : 'row', urlNews(n.id));
+      a.appendChild(img(big ? n.image : (n.thumb || n.image), n.title, big));
+      var d = el('div');
+      d.appendChild(metaLine(n));
+      d.appendChild(el('div', 'ttl', n.title));   // в списках заголовки — не h2/h3 (на странице только один h1)
+      d.appendChild(el('p', null, n.lead));
+      a.appendChild(d);
+      return a;
+    }
+
+    function drawHeader(isHome, cat) {
+      // логотип — h1 только на главной ленты: на странице всегда ровно один h1
+      logo.innerHTML = '';
+      var box = el(isHome ? 'h1' : 'div', 'logo');
+      var a = link(null, urlCat(null));
+      a.appendChild(document.createTextNode('Новости '));
+      a.appendChild(el('span', null, 'спорта'));
+      box.appendChild(a);
+      logo.appendChild(box);
+
+      nav.innerHTML = '';
+      var present = {};
+      items.forEach(function (n) { present[n.category] = 1; });
+      [null].concat(CATS.filter(function (c) { return present[c.label]; })).forEach(function (c) {
+        var li = el('li');
+        li.appendChild(link(c === cat || (c && cat && c.slug === cat.slug) ? 'on' : '', urlCat(c), c ? c.label : 'Все новости'));
+        nav.appendChild(li);
+      });
+    }
+
+    /* ---------- лента ---------- */
+    function drawList(cat) {
+      drawHeader(!cat, cat);
+      var list = items.filter(function (n) { return !cat || n.category === cat.label; });
+      view.innerHTML = '';
+      if (cat) view.appendChild(el('h1', 'h1c', cat.h1));
+      if (!list.length) view.appendChild(el('div', 'empty', loaded ? 'Новостей пока нет' : 'Загружаем новости…'));
+      else {
+        var rest;
+        if (list.length >= 5) {
+          var grid = el('div', 'top-grid'), left = el('div'), side = el('aside');
+          left.appendChild(feat(list[0]));
+          var pair = el('div', 'pair');
+          pair.appendChild(mid(list[1]));
+          pair.appendChild(mid(list[2]));
+          left.appendChild(pair);
+          side.appendChild(el('div', 'side-t', 'Самое свежее'));
+          list.slice(3, 5).forEach(function (n) { side.appendChild(mini(n)); });
+          addAd(side, 'side');                 // баннер 300×250 между новостями справа — на первом экране
+          list.slice(5, 7).forEach(function (n) { side.appendChild(mini(n)); });
+          grid.appendChild(left);
+          grid.appendChild(side);
+          view.appendChild(grid);
+          rest = list.slice(7, shown + 7);
+        } else {                                   // мало новостей (например, в разделе) — без верхнего блока
+          rest = list.slice(0, shown);
+        }
+        // ниже — две колонки: лента с баннерами каждые FEED_AD_EVERY новостей и рекламная колонка справа
+        var cols = el('div', 'cols'), feed = el('div', 'feed'), rail = el('aside', 'rail');
+        if (list.length >= 5 && rest.length) feed.appendChild(el('div', 'sec-t', 'Ещё новости'));
+        rest.forEach(function (n, i) {
+          feed.appendChild(card(n, list.length < 5 && i === 0));
+          if ((i + 1) % FEED_AD_EVERY === 0 && i + 1 < rest.length) addAd(feed, 'feed');
+        });
+        addAd(rail, 'rail');
+        rail.style.top = (fixedTop() + 16) + 'px';   // не заезжать под закреплённую шапку сайта
+        cols.appendChild(feed);
+        cols.appendChild(rail);
+        if (rest.length) view.appendChild(cols);
+        if (list.length > shown + (list.length >= 5 ? 7 : 0)) {
+          var b = el('button', 'more', 'Показать ещё');
+          b.type = 'button';
+          b.onclick = function () { shown += PAGE; drawList(cat); };
+          feed.appendChild(b);
+        }
+      }
+      var url = abs(urlCat(cat));
+      var title = (cat ? cat.h1 : HOME_TITLE) + ' — ' + CONFIG.siteName;
+      var desc = cat ? cat.h1 + ': свежие события, результаты, трансферы и заявления.' : HOME_DESC;
+      var trail = [['Главная', CONFIG.homeUrl], [HOME_TITLE, abs(urlCat(null))]];
+      if (cat) trail.push([cat.h1, url]);
+      var visible = list.slice(0, shown);
+      seo({
+        title: title, desc: desc, url: url, type: 'website',
+        image: list.length && list[0].image ? BASE + list[0].image : null,
+        ld: {'@context': 'https://schema.org', '@graph': [
+          {'@type': 'CollectionPage', '@id': url, url: url, name: cat ? cat.h1 : HOME_TITLE, description: desc,
+           inLanguage: 'ru', mainEntity: {'@id': url + '#list'}},
+          {'@type': 'ItemList', '@id': url + '#list', numberOfItems: visible.length,
+           itemListElement: visible.map(function (n, i) {
+             return {'@type': 'ListItem', position: i + 1, url: abs(urlNews(n.id)), name: n.title};
+           })},
+          crumbs(trail)
+        ]}
+      });
+      if (loaded) ready();
+    }
+
+    /* ---------- страница новости ---------- */
+    function fillOthers(box, id) {
+      var old = box.querySelector('.also');
+      if (old) old.remove();
+      var others = items.filter(function (x) { return x.id !== id; }).slice(0, 5);
+      if (!others.length) return;
+      var also = el('aside', 'also');
+      also.appendChild(el('div', 'also-t', 'Другие новости'));
+      others.forEach(function (x) { also.appendChild(card(x)); });
+      box.appendChild(also);
+    }
+
+    function drawNews(id) {
+      var my = ++seq;
+      artCat = null;
+      drawHeader(false, null);
+      view.innerHTML = '';
+      var box = el('article', 'art');
+      box.appendChild(link('back', urlCat(null), '← Все новости'));
+      var note = el('div', 'empty', 'Загружаем…');
+      box.appendChild(note);
+      var wrap = el('div', 'art-cols'), rail = el('aside', 'rail');   // текст новости + реклама справа
+      wrap.appendChild(box);
+      addAd(rail, 'rail');
+      rail.style.top = (fixedTop() + 16) + 'px';
+      wrap.appendChild(rail);
+      view.appendChild(wrap);
+
+      function fail(notFound) {
+        if (my !== seq) return;
+        note.textContent = notFound ? 'Новость не найдена. Возможно, она устарела и удалена из архива.' : 'Не удалось загрузить новость. Обновите страницу.';
+        if (notFound) seo({title: 'Новость не найдена — ' + CONFIG.siteName, desc: HOME_DESC, url: abs(urlCat(null)), type: 'website', notFound: true});
+        ready();
+      }
+      if (!/^[a-z0-9-]+$/i.test(id)) { fail(true); return; }
+
+      fetch(BASE + 'a/' + id + '.json')
+        .then(function (r) {
+          if (r.status === 404) { fail(true); return null; }
+          if (!r.ok) throw new Error(r.status);
+          return r.json();
+        })
+        .then(function (n) {
+          if (!n || my !== seq) return;
+          var cat = artCat = findCat(n.category);
+          drawHeader(false, cat);
+          box.removeChild(note);
+          box.appendChild(metaLine(n, true));
+          box.appendChild(el('h1', null, n.title));
+          if (n.lead) box.appendChild(el('p', 'lead', n.lead));
+          if (n.image) { var f = el('figure'); f.appendChild(img(n.image, n.title, true)); box.appendChild(f); }
+          var body = el('div', 'body');
+          (n.body || []).forEach(function (p) { body.appendChild(el('p', null, p)); });
+          box.appendChild(body);
+          addAd(box, 'article');                   // баннер под текстом новости
+          fillOthers(box, n.id);
+
+          var url = abs(urlNews(n.id)), home = abs(urlCat(null));
+          var trail = [['Главная', CONFIG.homeUrl], [HOME_TITLE, home]];
+          if (cat) trail.push([cat.h1, abs(urlCat(cat))]);
+          trail.push([n.title, url]);
+          var article = {
+            '@type': 'NewsArticle', headline: n.title.slice(0, 110), description: n.lead,
+            datePublished: n.published, dateModified: n.modified || n.published,
+            articleSection: n.category, inLanguage: 'ru',
+            mainEntityOfPage: {'@type': 'WebPage', '@id': url},
+            author: {'@type': 'Organization', name: CONFIG.author},
+            publisher: {'@type': 'Organization', name: CONFIG.siteName}
+          };
+          if (n.image) article.image = [BASE + n.image];
+          seo({
+            title: n.title + ' — ' + CONFIG.siteName, desc: n.lead || n.title, url: url, type: 'article',
+            image: n.image ? BASE + n.image : null,
+            ld: {'@context': 'https://schema.org', '@graph': [article, crumbs(trail)]}
+          });
+          ready();
+        })
+        .catch(function () { fail(false); });
+    }
+
+    /* ---------- переходы ---------- */
+    /* ---------- прокрутка: экран никогда не прыгает вниз ---------- */
+    // высота закреплённой шапки сайта (если она есть), чтобы она не закрывала начало новости
+    function fixedTop() {
+      var w = window.innerWidth || document.documentElement.clientWidth, h = 0, seen = [];
+      var cand = [];
+      [0.2, 0.5, 0.8].forEach(function (x) {
+        if (document.elementsFromPoint && w) cand = cand.concat(document.elementsFromPoint(w * x, 2));
+      });
+      cand = cand.concat([].slice.call(document.querySelectorAll('header, [class*="header"], [class*="Header"]')));
+      cand.forEach(function (e) {
+        for (; e && e !== document.body && e !== document.documentElement; e = e.parentElement) {
+          if (seen.indexOf(e) >= 0 || root.contains(e)) return;
+          seen.push(e);
+          var pos = getComputedStyle(e).position, r = e.getBoundingClientRect();
+          if ((pos === 'fixed' || pos === 'sticky') && r.top <= 1 && r.bottom > 0 && r.height < window.innerHeight * 0.4) {
+            h = Math.max(h, r.bottom); return;
+          }
+        }
+      });
+      return h;
+    }
+    // поднять экран к началу блока новостей — только если пользователь уже пролистал ниже него
+    function upToTop() {
+      var top = root.getBoundingClientRect().top - fixedTop();
+      if (top < 0) window.scrollTo(0, Math.max(0, window.scrollY + top));
+    }
+
+    function render(isNav) {
+      var r = route();
+      var key = r.page + '/' + (r.id || (r.cat ? r.cat.slug : ''));
+      if (isNav && lastKey.indexOf('list/') === 0) listScroll = window.scrollY;
+      if (r.page === 'news') {
+        drawNews(r.id);
+        if (isNav) upToTop();
+      } else {
+        seq++;
+        if (key !== lastKey && lastKey.indexOf('list/') === 0) shown = PAGE;   // сменили раздел
+        drawList(r.cat);
+        if (isNav) {
+          if (lastKey.indexOf('news/') === 0 && listScroll) window.scrollTo(0, listScroll);   // назад из новости — на прежнее место
+          // переключение разделов: экран не трогаем
+        }
+      }
+      lastKey = key;
+      lastHref = location.href;
+    }
+
+    function onUrlChange() { if (location.href !== lastHref) { virtual = null; render(true); } }
+
+    function onClick(e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest ? e.target.closest('a[data-nav]') : null;
+      if (!a || !root.contains(a)) return;
+      e.preventDefault();
+      if (CONFIG.urlMode === 'hash') {
+        var target = a.getAttribute('href'), before = location.href;
+        try { location.hash = target; } catch (err) {}
+        // окружение не даёт менять адрес (например, предпросмотр файла) — переходим «внутри» страницы
+        if (location.href === before) { virtual = target; render(true); }
+        return;
+      }
+      try { history.pushState(null, '', a.getAttribute('href')); }
+      catch (err) { location.href = a.href; return; }
+      onUrlChange();
+    }
+
+    /* ---------- загрузка ленты ---------- */
+    function loadBanners() {
+      return fetch(BASE + 'banners.json?t=' + Date.now())
+        .then(function (r) { return r.ok ? r.json() : {}; })
+        .then(function (b) { banners = b && typeof b === 'object' ? b : {}; })
+        .catch(function () { banners = {}; });
+    }
+
+    function load() {
+      fetch(BASE + 'news.json?t=' + Date.now())
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (data) {
+          loaded = true;
+          items = (data.items || []).filter(function (n) { return n.category; });
+          upd.className = 'foot';
+          upd.textContent = data.updated_at ? 'Лента обновлена: ' + when(data.updated_at) : '';
+          var r = route();
+          if (r.page === 'list') drawList(r.cat);
+          else {   // на странице статьи экран не дёргаем — только обновляем разделы и «Другие новости»
+            drawHeader(false, artCat);
+            var box = view.querySelector('.art');
+            if (box && box.querySelector('.body')) { fillOthers(box, r.id); }
+          }
+        })
+        .catch(function (e) {
+          upd.className = 'foot err';
+          upd.textContent = 'Не удалось загрузить новости (' + e.message + ')';
+          if (!loaded && route().page === 'list') { view.innerHTML = ''; ready(); }
+        });
+    }
+
+    root.addEventListener('click', onClick);
+    window.addEventListener('popstate', onUrlChange);
+    window.addEventListener('hashchange', onUrlChange);
+    var timer = setInterval(load, 120000);
+    // ушли с лендинга на другую страницу сайта — убираем за собой title, canonical и микроразметку
+    var guard = setInterval(function () { if (!document.documentElement.contains(root)) window.__mbnStop(); }, 1500);
+
+    window.__mbnStop = function () {
+      clearInterval(timer); clearInterval(guard);
+      root.removeEventListener('click', onClick);
+      window.removeEventListener('popstate', onUrlChange);
+      window.removeEventListener('hashchange', onUrlChange);
+      Object.keys(tags).forEach(dropTag);
+      dropLd();
+      if (origTitle !== null) document.title = origTitle;
+      window.__mbnStop = null;
+    };
+
+    loadBanners().then(function () {
+      var top = document.getElementById('mbn-adtop');
+      if (top) { top.innerHTML = ''; addAd(top, 'top'); }   // длинный баннер сверху, под меню разделов
+      render(false); load();
+    });
+  })();
+  </script>
+</div>
+
+</body></html>
